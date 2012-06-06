@@ -1,0 +1,12 @@
+*.pyc
+*~
+.*.swp
+\#*#
+/secrets.py
+.DS_Store
+._*
+/FeinCMS.egg-info
+/MANIFEST
+/_build
+/build
+/dist
