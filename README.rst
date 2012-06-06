@@ -3,7 +3,7 @@ feincms-cleanse
 ===============
 
 This is the FeinCMS HTML cleansing function which lived under the name of
-:py:func:`feincms.utils.html.cleanse.cleanse_html`, and has been moved to
+``feincms.utils.html.cleanse.cleanse_html``, and has been moved to
 its own repository now to be usable in other projects, and to not set a
 precedent for a particular HTML cleaning technique in FeinCMS anymore.
 
