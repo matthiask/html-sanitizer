@@ -124,9 +124,9 @@ def cleanse_html(html):
 
     # merge tags
     for tag in cleanse_html_merge:
-        merge_str = u'</%s><%s>'
+        merge_str = u'\s*</%s>\s*<%s>\s*' % (tag, tag)
         while True:
-            new = html.replace(merge_str, u'')
+            new = re.sub(merge_str, u' ', html)
             if new == html:
                 break
             html = new
