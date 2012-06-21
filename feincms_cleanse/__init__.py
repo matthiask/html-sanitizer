@@ -41,7 +41,7 @@ def cleanse_html(html):
 
     doc = lxml.html.fromstring('<anything>%s</anything>' % html)
     try:
-        ignore = lxml.html.tostring(doc, encoding=unicode)
+        lxml.html.tostring(doc, encoding=unicode)
     except UnicodeDecodeError:
         # fall back to slower BeautifulSoup if parsing failed
         from lxml.html import soupparser
@@ -106,13 +106,13 @@ def cleanse_html(html):
 
     html = lxml.html.tostring(doc, method='xml')
 
+    # remove wrapping tag needed by XML parser
+    html = re.sub(r'</?anything>', '', html)
+
     # remove all sorts of newline characters
     html = html.replace('\n', ' ').replace('\r', ' ')
     html = html.replace('&#10;', ' ').replace('&#13;', ' ')
     html = html.replace('&#xa;', ' ').replace('&#xd;', ' ')
-
-    # remove wrapping tag needed by XML parser
-    html = re.sub(r'</?anything>', '', html)
 
     # remove elements containing only whitespace or linebreaks
     whitespace_re = re.compile(r'<([a-z0-9]+)>(<br\s*/>|\&nbsp;|\&#160;|\s)*</\1>')
@@ -164,4 +164,3 @@ def cleanse_html(html):
     html = unicodedata.normalize('NFKC', html)
 
     return html
-
