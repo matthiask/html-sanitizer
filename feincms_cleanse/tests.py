@@ -4,10 +4,10 @@ from feincms_cleanse import cleanse_html
 
 
 class CleanseTestCase(TestCase):
-    def run_tests(self, entries):
+    def run_tests(self, entries, **kwargs):
         for before, after in entries:
             after = before if after is None else after
-            result = cleanse_html(before)
+            result = cleanse_html(before, **kwargs)
             self.assertEqual(result, after, u"Cleaning '%s', expected '%s' but got '%s'" % (before, after, result))
 
     def test_01_cleanse(self):
@@ -69,3 +69,13 @@ class CleanseTestCase(TestCase):
                   )
 
         self.run_tests(entries)
+
+    def test_07_configuration(self):
+        entries = (
+                   ('<h1>foo</h1>', None),
+                   ('<h1>foo</h1><h2>bar</h2><h3>baz</h3>', '<h1>foo</h1><h2>bar</h2>baz'),
+                  )
+
+        allowed_tags = { 'h1': (), 'h2': () }
+
+        self.run_tests(entries, allowed_tags=allowed_tags)

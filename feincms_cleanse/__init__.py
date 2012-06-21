@@ -7,6 +7,7 @@ import lxml.html.clean
 import re
 import unicodedata
 
+__all__ = ('cleanse_html', )
 
 cleanse_html_allowed = {
     'a': ('href', 'name', 'target', 'title'),
@@ -30,7 +31,10 @@ cleanse_html_allowed_empty_tags = ('br',)
 cleanse_html_merge = ('h2', 'h3', 'strong', 'em', 'ul', 'ol', 'sub', 'sup')
 
 
-def cleanse_html(html):
+def cleanse_html(html,
+                 allowed_tags=cleanse_html_allowed,
+                 allowed_empty_tags=cleanse_html_allowed_empty_tags,
+                 merge_tags=cleanse_html_merge):
     """
     Clean HTML code from ugly copy-pasted CSS and empty elements
 
@@ -48,7 +52,7 @@ def cleanse_html(html):
         doc = soupparser.fromstring(u'<anything>%s</anything>' % html)
 
     cleaner = lxml.html.clean.Cleaner(
-        allow_tags=cleanse_html_allowed.keys() + ['style'],
+        allow_tags=allowed_tags.keys() + ['style'],
         remove_unknown_tags=False, # preserve surrounding 'anything' tag
         style=False, safe_attrs_only=False, # do not strip out style
                                             # attributes; we still need
@@ -83,13 +87,13 @@ def cleanse_html(html):
 
         # remove empty tags if they are not <br />
         elif not element.text and element.tag not in \
-                cleanse_html_allowed_empty_tags and not \
+                allowed_empty_tags and not \
                 len(list(element.iterdescendants())):
             element.drop_tag()
             continue
 
         # remove all attributes which are not explicitly allowed
-        allowed = cleanse_html_allowed.get(element.tag, [])
+        allowed = allowed_tags.get(element.tag, [])
         for key in element.attrib.keys():
             if key not in allowed:
                 del element.attrib[key]
@@ -97,7 +101,7 @@ def cleanse_html(html):
     # just to be sure, run cleaner again, but this time with even more
     # strict settings
     cleaner = lxml.html.clean.Cleaner(
-        allow_tags=cleanse_html_allowed.keys(),
+        allow_tags=allowed_tags.keys(),
         remove_unknown_tags=False, # preserve surrounding 'anything' tag
         style=True, safe_attrs_only=True
         )
@@ -123,7 +127,7 @@ def cleanse_html(html):
         html = new
 
     # merge tags
-    for tag in cleanse_html_merge:
+    for tag in merge_tags:
         merge_str = u'\s*</%s>\s*<%s>\s*' % (tag, tag)
         while True:
             new = re.sub(merge_str, u' ', html)
@@ -135,7 +139,7 @@ def cleanse_html(html):
     p_in_p_start_re = re.compile(r'<p>(\&nbsp;|\&#160;|\s)*<p>')
     p_in_p_end_re = re.compile('</p>(\&nbsp;|\&#160;|\s)*</p>')
 
-    for tag in cleanse_html_merge:
+    for tag in merge_tags:
         merge_start_re = re.compile('<p>(\\&nbsp;|\\&#160;|\\s)*<%s>(\\&nbsp;|\\&#160;|\\s)*<p>' % tag)
         merge_end_re = re.compile('</p>(\\&nbsp;|\\&#160;|\\s)*</%s>(\\&nbsp;|\\&#160;|\\s)*</p>' % tag)
 
