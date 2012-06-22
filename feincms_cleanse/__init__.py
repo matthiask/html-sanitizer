@@ -31,6 +31,12 @@ cleanse_html_allowed_empty_tags = ('br',)
 cleanse_html_merge = ('h2', 'h3', 'strong', 'em', 'ul', 'ol', 'sub', 'sup')
 # ------------------------------------------------------------------------
 def _validate_href(href):
+    """
+    Verify that a given href is benign and allowed.
+    """
+    # TODO: Implement me! This should ensure that the href is either a
+    # path without a protocol, or the protocol is known and http/https.
+    # Perhaps also add an option to allow/forbid off-site hrefs?
     return True
 
 # ------------------------------------------------------------------------
