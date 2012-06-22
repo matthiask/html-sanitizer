@@ -29,8 +29,11 @@ cleanse_html_allowed = {
 cleanse_html_allowed_empty_tags = ('br',)
 
 cleanse_html_merge = ('h2', 'h3', 'strong', 'em', 'ul', 'ol', 'sub', 'sup')
+# ------------------------------------------------------------------------
+def _validate_href(href):
+    return True
 
-
+# ------------------------------------------------------------------------
 def cleanse_html(html,
                  allowed_tags=cleanse_html_allowed,
                  allowed_empty_tags=cleanse_html_allowed_empty_tags,
@@ -97,6 +100,11 @@ def cleanse_html(html,
         for key in element.attrib.keys():
             if key not in allowed:
                 del element.attrib[key]
+
+        # Clean hrefs so that they are benign
+        href = element.attrib.get('href', None)
+        if href is not None and not _validate_href(href):
+            del element.attrib['href']
 
     # just to be sure, run cleaner again, but this time with even more
     # strict settings
