@@ -86,9 +86,9 @@ def cleanse_html(html,
                 continue
 
         # remove empty tags if they are not <br />
-        elif not element.text and element.tag not in \
-                allowed_empty_tags and not \
-                len(list(element.iterdescendants())):
+        elif (not element.text and
+              element.tag not in allowed_empty_tags and
+              not len(element)):
             element.drop_tag()
             continue
 
