@@ -86,3 +86,11 @@ class CleanseTestCase(TestCase):
                   )
 
         self.run_tests(entries, klass=MyCleanse)
+
+    def test_08_li_with_marker(self):
+        entries = (
+                   ('<li> - foo</li>', '<li>foo</li>'),
+                   ('<li>* foo</li>', '<li>foo</li>'),
+                  )
+
+        self.run_tests(entries)
