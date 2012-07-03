@@ -49,13 +49,14 @@ class Cleanse(object):
         Requires ``lxml`` and ``beautifulsoup``.
         """
 
-        doc = lxml.html.fromstring('<anything>%s</anything>' % html)
+        html = u'<anything>%s</anything>' % html
+        doc = lxml.html.fromstring(html)
         try:
             lxml.html.tostring(doc, encoding=unicode)
         except UnicodeDecodeError:
             # fall back to slower BeautifulSoup if parsing failed
             from lxml.html import soupparser
-            doc = soupparser.fromstring(u'<anything>%s</anything>' % html)
+            doc = soupparser.fromstring(html)
 
         cleaner = lxml.html.clean.Cleaner(
             allow_tags=self.allowed_tags.keys() + ['style'],
@@ -97,6 +98,12 @@ class Cleanse(object):
                   not len(element)):
                 element.drop_tag()
                 continue
+
+            elif element.tag == 'li':
+                # remove p-in-li tags
+                for p in element.findall('p'):
+                    p.text = ' ' + p.text +' '
+                    p.drop_tag()
 
             # remove all attributes which are not explicitly allowed
             allowed = self.allowed_tags.get(element.tag, [])
@@ -165,11 +172,7 @@ class Cleanse(object):
                 html = new
 
         # remove list markers with <li> tags before them
-        html = re.sub(r'<li>(\&nbsp;|\&#160;|\s)*(-|\*|&#183;)(\&nbsp;|\&#160;|\s)*', '<li>', html)
-
-        # remove p-in-li tags
-        html = re.sub(r'<li>(\&nbsp;|\&#160;|\s)*<p>', '<li>', html)
-        html = re.sub(r'</p>(\&nbsp;|\&#160;|\s)*</li>', '</li>', html)
+        html = re.sub(r'<li>(\&nbsp;|\&#160;|\s)*(-|\*|&#183;)(\&nbsp;|\&#160;|\s)+', '<li>', html)
 
         # add a space before the closing slash in empty tags
         html = re.sub(r'<([^/>]+)/>', r'<\1 />', html)
