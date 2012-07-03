@@ -1,18 +1,17 @@
 from django.test import TestCase
 from unittest import expectedFailure
 
-from feincms_cleanse import cleanse_html
+from feincms_cleanse import Cleanse
 
 
 class CleanseTestCase(TestCase):
-    def run_tests(self, entries, **kwargs):
+    def run_tests(self, entries, klass=Cleanse):
         for before, after in entries:
             after = before if after is None else after
-            result = cleanse_html(before, **kwargs)
+            result = klass().cleanse(before)
             self.assertEqual(result, after, u"Cleaning '%s', expected '%s' but got '%s'" % (before, after, result))
 
     def test_01_cleanse(self):
-
         entries = [
             (u'<p>&nbsp;</p>', u''),
             (u'<p>           </p>', u''),
@@ -78,11 +77,12 @@ class CleanseTestCase(TestCase):
 
     @expectedFailure
     def test_07_configuration(self):
+        class MyCleanse(Cleanse):
+            allowed_tags = { 'h1': (), 'h2': () }
+
         entries = (
                    ('<h1>foo</h1>', None),
                    ('<h1>foo</h1><h2>bar</h2><h3>baz</h3>', '<h1>foo</h1><h2>bar</h2>baz'),
                   )
 
-        allowed_tags = { 'h1': (), 'h2': () }
-
-        self.run_tests(entries, allowed_tags=allowed_tags)
+        self.run_tests(entries, klass=MyCleanse)
