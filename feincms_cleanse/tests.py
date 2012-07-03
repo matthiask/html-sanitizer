@@ -47,21 +47,23 @@ class CleanseTestCase(TestCase):
 
         self.run_tests(entries)
 
-    @expectedFailure
     def test_04_p_in_li(self):
         entries = (
-                   ('<li><p>foo</p></li>', '<li>foo</li>'),
-                   ('<li>&nbsp;<p>foo</p> &#160; </li>', '<li>foo</li>'),
-                   ('<li>foo<p>bar</p>baz</li>', '<li>foo bar baz</li>'),
+                   ('<li><p>foo</p></li>', '<li> foo </li>'),
+                   ('<li>&nbsp;<p>foo</p> &#160; </li>', '<li>  foo    </li>'),
+                   ('<li>foo<p>bar<strong>xx</strong>rab</p><strong>baz</strong>a<p>b</p>c</li>', '<li>foo bar <strong>xx</strong>rab<strong>baz</strong>a b c</li>'),
                   )
 
         self.run_tests(entries)
 
-    @expectedFailure
     def test_05_p_in_p(self):
         entries = (
+                   ('<p><p>foo</p></p>', '<p>foo</p>'),
                    (u'<p><p><p>&nbsp;</p> </p><p><br /></p></p>', u' '),
-                   ('<p>foo<p>bar</p>baz</p>', '<p>foo bar baz</p>'),
+                   # This is actually correct as the second <p> implicitely
+                   # closes the first paragraph, and the trailing </p> is
+                   # deleted because it has no matching opening <p>
+                   ('<p>foo<p>bar</p>baz</p>', '<p>foo</p><p>bar</p>baz'),
                   )
 
         self.run_tests(entries)
