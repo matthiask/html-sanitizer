@@ -35,7 +35,7 @@ class CleanseTestCase(TestCase):
                     ('<a href="http://somewhere.else">foo</a>', None),
                     ('<a href="https://somewhere.else">foo</a>', None),
                     ('<a href="javascript:alert()">foo</a>', '<a href="">foo</a>'),
-                    ('<a href="javascript%2Dalert()">foo</a>', '<a href="">foo</a>'),
+                    ('<a href="javascript%3Aalert()">foo</a>', '<a href="">foo</a>'),
                   )
 
         self.run_tests(entries)
