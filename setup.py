@@ -28,4 +28,5 @@ setup(name='feincms-cleanse',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development',
     ],
+    install_requires=('lxml>=2.2', 'BeautifulSoup>=3'),
 )

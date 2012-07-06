@@ -1,9 +1,6 @@
 VERSION = (1, 0, 0)
 __version__ = '.'.join(map(str, VERSION))
 
-from BeautifulSoup import BeautifulSoup
-import lxml.html
-import lxml.html.clean
 import re
 import unicodedata
 
@@ -51,6 +48,9 @@ def cleanse_html(html,
 
     Requires ``lxml`` and ``beautifulsoup``.
     """
+    from BeautifulSoup import BeautifulSoup
+    import lxml.html
+    import lxml.html.clean
 
     doc = lxml.html.fromstring('<anything>%s</anything>' % html)
     try:
