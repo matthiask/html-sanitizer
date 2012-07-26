@@ -31,7 +31,7 @@ class Cleanse(object):
 
     merge_tags = ('h2', 'h3', 'strong', 'em', 'ul', 'ol', 'sub', 'sup')
 
-    def validate_href(href):
+    def validate_href(self, href):
         """
         Verify that a given href is benign and allowed.
         """
