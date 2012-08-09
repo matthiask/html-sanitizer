@@ -42,6 +42,7 @@ class Cleanse(object):
 
 
     def clean(self, element):
+        """ Hook for your own clean methods. """
         return element
 
 
