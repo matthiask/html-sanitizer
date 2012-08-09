@@ -40,6 +40,11 @@ class Cleanse(object):
         # Perhaps also add an option to allow/forbid off-site hrefs?
         return True
 
+
+    def clean(self, element):
+        return element
+
+
     def cleanse(self, html):
         """
         Clean HTML code from ugly copy-pasted CSS and empty elements
@@ -104,6 +109,9 @@ class Cleanse(object):
                 for p in element.findall('p'):
                     p.text = ' ' + p.text +' '
                     p.drop_tag()
+
+            # Hook for custom filters:
+            element = self.clean(element)
 
             # remove all attributes which are not explicitly allowed
             allowed = self.allowed_tags.get(element.tag, [])
