@@ -7,7 +7,7 @@ import setuplib
 packages, package_data = setuplib.find_packages('feincms_cleanse')
 
 setup(name='feincms-cleanse',
-    version='1.1.0',
+    version='2',
     description='Default HTML cleansing in FeinCMS',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
     author='Matthias Kestenholz',

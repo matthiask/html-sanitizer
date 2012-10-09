@@ -1,4 +1,4 @@
-VERSION = (1, 1, 00)
+VERSION = (2,)
 __version__ = '.'.join(map(str, VERSION))
 
 from BeautifulSoup import BeautifulSoup
