@@ -34,12 +34,11 @@ class Cleanse(object):
     def validate_href(self, href):
         """
         Verify that a given href is benign and allowed.
-        """
-        # TODO: Implement me! This should ensure that the href is either a
-        # path without a protocol, or the protocol is known and http/https.
-        # Perhaps also add an option to allow/forbid off-site hrefs?
-        return True
 
+        This is a stupid check, which probably should be much more elaborate
+        to be safe.
+        """
+        return href.startswith(('/', 'mailto:', 'http:', 'https:', '#'))
 
     def clean(self, element):
         """ Hook for your own clean methods. """
@@ -123,7 +122,7 @@ class Cleanse(object):
             # Clean hrefs so that they are benign
             href = element.attrib.get('href', None)
             if href is not None and not self.validate_href(href):
-                del element.attrib['href']
+                element.attrib['href'] = ''
 
         # just to be sure, run cleaner again, but this time with even more
         # strict settings

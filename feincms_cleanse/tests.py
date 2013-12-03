@@ -26,7 +26,6 @@ class CleanseTestCase(TestCase):
 
         self.run_tests(entries)
 
-    @expectedFailure
     def test_02_a_tag(self):
         entries = (
                     ('<a href="/foo">foo</a>', None),
