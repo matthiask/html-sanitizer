@@ -29,8 +29,6 @@ class Cleanse(object):
 
     empty_tags = ('br',)
 
-    empty_content_tags = ('td', 'th', 'p')
-
     merge_tags = ('h2', 'h3', 'strong', 'em', 'ul', 'ol', 'sub', 'sup')
 
     def validate_href(self, href):
@@ -102,8 +100,8 @@ class Cleanse(object):
 
             # remove empty tags if they are not <br />
             elif (not element.text and
-                  element.tag not in (self.empty_tags + self.empty_content_tags)
-                  and not len(element)):
+                  element.tag not in self.empty_tags and
+                  not len(element)):
                 element.drop_tag()
                 continue
 
@@ -146,6 +144,14 @@ class Cleanse(object):
         html = html.replace('\n', ' ').replace('\r', ' ')
         html = html.replace('&#10;', ' ').replace('&#13;', ' ')
         html = html.replace('&#xa;', ' ').replace('&#xd;', ' ')
+
+        # remove elements containing only whitespace or linebreaks
+        whitespace_re = re.compile(r'<([a-z0-9]+)>(<br\s*/>|\&nbsp;|\&#160;|\s)*</\1>')
+        while True:
+            new = whitespace_re.sub('', html)
+            if new == html:
+                break
+            html = new
 
         # merge tags
         for tag in self.merge_tags:
