@@ -59,7 +59,7 @@ class CleanseTestCase(TestCase):
     def test_05_p_in_p(self):
         entries = (
                    ('<p><p>foo</p></p>', '<p>foo</p>'),
-                   (u'<p><p><p>&nbsp;</p> </p><p><br /></p></p>', u' '),
+                   (u'<p><p><p>&nbsp;</p> </p><p><br /></p></p>', u''),
                    # This is actually correct as the second <p> implicitely
                    # closes the first paragraph, and the trailing </p> is
                    # deleted because it has no matching opening <p>
@@ -68,7 +68,6 @@ class CleanseTestCase(TestCase):
 
         self.run_tests(entries)
 
-    @expectedFailure
     def test_06_whitelist(self):
         entries = (
                    (u'<script src="http://abc">foo</script>', u''),

@@ -137,9 +137,6 @@ class Cleanse(object):
 
         html = lxml.html.tostring(doc, method='xml')
 
-        # remove wrapping tag needed by XML parser
-        html = re.sub(r'</?anything>', '', html)
-
         # remove all sorts of newline characters
         html = html.replace('\n', ' ').replace('\r', ' ')
         html = html.replace('&#10;', ' ').replace('&#13;', ' ')
@@ -185,6 +182,9 @@ class Cleanse(object):
 
         # add a space before the closing slash in empty tags
         html = re.sub(r'<([^/>]+)/>', r'<\1 />', html)
+
+        # remove wrapping tag needed by XML parser
+        html = re.sub(r'</?anything( /)?>', '', html)
 
         # nicify entities and normalize unicode
         html = unicode(BeautifulSoup(html, convertEntities='xml'))
