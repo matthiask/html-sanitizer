@@ -1,9 +1,6 @@
 import os
 
 
-__all__ = ['find_files']
-
-
 def fullsplit(path, result=None):
     """
     Split a pathname into components (the opposite of os.path.join) in a
@@ -42,16 +39,18 @@ def find_packages(package_dir):
     for dirpath, dirnames, filenames in sorted(os.walk(package_dir)):
         # Ignore dirnames that start with '.'
         for i, dirname in enumerate(dirnames):
-            if dirname.startswith('.'): del dirnames[i]
+            if dirname.startswith('.'):
+                del dirnames[i]
         if '__init__.py' in filenames:
             packages.append('.'.join(fullsplit(dirpath)))
         elif filenames:
-            cur_pack = packages[0] # Assign all data files to the toplevel package
+            # Assign all data files to the toplevel package
+            cur_pack = packages[0]
             if cur_pack not in package_data:
                 package_data[cur_pack] = []
             package_dir = "/".join(cur_pack.split(".")) + "/"
             for f in filenames:
-                package_data[cur_pack].append(os.path.join(dirpath.replace(package_dir, ""), f))
+                package_data[cur_pack].append(
+                    os.path.join(dirpath.replace(package_dir, ""), f))
 
     return packages, package_data
-

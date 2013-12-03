@@ -1,5 +1,4 @@
 from django.test import TestCase
-from unittest import expectedFailure
 
 from feincms_cleanse import Cleanse
 
@@ -33,7 +32,11 @@ class CleanseTestCase(TestCase):
     def test_02_a_tag(self):
         entries = (
             ('<a href="/foo">foo</a>', None),
-            ('<a href="/foo" target="some" name="bar" title="baz" cookies="yesplease">foo</a>', '<a href="/foo" target="some" name="bar" title="baz">foo</a>'),
+            (
+                '<a href="/foo" target="some" name="bar" title="baz"'
+                ' cookies="yesplease">foo</a>',
+                '<a href="/foo" target="some" name="bar" title="baz">foo</a>'
+            ),
             ('<a href="http://somewhere.else">foo</a>', None),
             ('<a href="https://somewhere.else">foo</a>', None),
             ('<a href="javascript:alert()">foo</a>', '<a href="">foo</a>'),
@@ -54,7 +57,12 @@ class CleanseTestCase(TestCase):
         entries = (
             ('<li><p>foo</p></li>', '<li> foo </li>'),
             ('<li>&nbsp;<p>foo</p> &#160; </li>', '<li>  foo    </li>'),
-            ('<li>foo<p>bar<strong>xx</strong>rab</p><strong>baz</strong>a<p>b</p>c</li>', '<li>foo bar <strong>xx</strong>rab<strong>baz</strong>a b c</li>'),
+            (
+                '<li>foo<p>bar<strong>xx</strong>rab</p><strong>baz</strong>'
+                'a<p>b</p>c</li>',
+                '<li>foo bar <strong>xx</strong>rab<strong>baz</strong>a b'
+                ' c</li>'
+            ),
         )
 
         self.run_tests(entries)
@@ -81,11 +89,14 @@ class CleanseTestCase(TestCase):
 
     def test_07_configuration(self):
         class MyCleanse(Cleanse):
-            allowed_tags = { 'h1': (), 'h2': () }
+            allowed_tags = {'h1': (), 'h2': ()}
 
         entries = (
             ('<h1>foo</h1>', None),
-            ('<h1>foo</h1><h2>bar</h2><h3>baz</h3>', '<h1>foo</h1><h2>bar</h2>baz'),
+            (
+                '<h1>foo</h1><h2>bar</h2><h3>baz</h3>',
+                '<h1>foo</h1><h2>bar</h2>baz'
+            ),
         )
 
         self.run_tests(entries, klass=MyCleanse)

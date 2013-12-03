@@ -7,7 +7,9 @@ import lxml.html.clean
 import re
 import unicodedata
 
+
 __all__ = ('cleanse_html', 'Cleanse')
+
 
 class Cleanse(object):
     allowed_tags = {
@@ -24,7 +26,7 @@ class Cleanse(object):
         'br': (),
         'sub': (),
         'sup': (),
-        }
+    }
 
     empty_tags = ('br',)
 
@@ -42,7 +44,6 @@ class Cleanse(object):
     def clean(self, element):
         """ Hook for your own clean methods. """
         return element
-
 
     def cleanse(self, html):
         """
@@ -64,12 +65,12 @@ class Cleanse(object):
 
         cleaner = lxml.html.clean.Cleaner(
             allow_tags=self.allowed_tags.keys() + ['style', 'anything'],
-            remove_unknown_tags=False, # preserve surrounding 'anything' tag
-            style=False, safe_attrs_only=False, # do not strip out style
-                                                # attributes; we still need
-                                                # the style information to
-                                                # convert spans into em/strong
-                                                # tags
+            remove_unknown_tags=False,  # preserve surrounding 'anything' tag
+            style=False, safe_attrs_only=False,  # do not strip out style
+                                                 # attributes; we still need
+                                                 # the style information to
+                                                 # convert spans into em/strong
+                                                 # tags
             )
 
         cleaner(doc)
@@ -92,8 +93,9 @@ class Cleanse(object):
                     elif 'italic' in style:
                         element.tag = 'em'
 
-                if element.tag == 'span': # still span
-                    element.drop_tag() # remove tag, but preserve children and text
+                if element.tag == 'span':  # still span
+                    # remove tag, but preserve children and text
+                    element.drop_tag()
                     continue
 
             # remove empty tags if they are not <br />
@@ -106,7 +108,7 @@ class Cleanse(object):
             elif element.tag == 'li':
                 # remove p-in-li tags
                 for p in element.findall('p'):
-                    p.text = ' ' + p.text +' '
+                    p.text = ' ' + p.text + ' '
                     p.drop_tag()
 
             # Hook for custom filters:
@@ -127,9 +129,9 @@ class Cleanse(object):
         # strict settings
         cleaner = lxml.html.clean.Cleaner(
             allow_tags=self.allowed_tags.keys() + ['anything'],
-            remove_unknown_tags=False, # preserve surrounding 'anything' tag
+            remove_unknown_tags=False,  # preserve surrounding 'anything' tag
             style=True, safe_attrs_only=True
-            )
+        )
 
         cleaner(doc)
 
@@ -141,7 +143,8 @@ class Cleanse(object):
         html = html.replace('&#xa;', ' ').replace('&#xd;', ' ')
 
         # remove elements containing only whitespace or linebreaks
-        whitespace_re = re.compile(r'<([a-z0-9]+)>(<br\s*/>|\&nbsp;|\&#160;|\s)*</\1>')
+        whitespace_re = re.compile(
+            r'<([a-z0-9]+)>(<br\s*/>|\&nbsp;|\&#160;|\s)*</\1>')
         while True:
             new = whitespace_re.sub('', html)
             if new == html:
@@ -162,8 +165,12 @@ class Cleanse(object):
         p_in_p_end_re = re.compile('</p>(\&nbsp;|\&#160;|\s)*</p>')
 
         for tag in self.merge_tags:
-            merge_start_re = re.compile('<p>(\\&nbsp;|\\&#160;|\\s)*<%s>(\\&nbsp;|\\&#160;|\\s)*<p>' % tag)
-            merge_end_re = re.compile('</p>(\\&nbsp;|\\&#160;|\\s)*</%s>(\\&nbsp;|\\&#160;|\\s)*</p>' % tag)
+            merge_start_re = re.compile(
+                '<p>(\\&nbsp;|\\&#160;|\\s)*<%s>(\\&nbsp;|\\&#160;|\\s)*<p>'
+                % tag)
+            merge_end_re = re.compile(
+                '</p>(\\&nbsp;|\\&#160;|\\s)*</%s>(\\&nbsp;|\\&#160;|\\s)*</p>'
+                % tag)
 
             while True:
                 new = merge_start_re.sub('<p>', html)
@@ -176,7 +183,10 @@ class Cleanse(object):
                 html = new
 
         # remove list markers with <li> tags before them
-        html = re.sub(r'<li>(\&nbsp;|\&#160;|\s)*(-|\*|&#183;)(\&nbsp;|\&#160;|\s)+', '<li>', html)
+        html = re.sub(
+            r'<li>(\&nbsp;|\&#160;|\s)*(-|\*|&#183;)(\&nbsp;|\&#160;|\s)+',
+            '<li>',
+            html)
 
         # add a space before the closing slash in empty tags
         html = re.sub(r'<([^/>]+)/>', r'<\1 />', html)
@@ -189,6 +199,7 @@ class Cleanse(object):
         html = unicodedata.normalize('NFKC', html)
 
         return html
+
 
 # ------------------------------------------------------------------------
 def cleanse_html(html):
