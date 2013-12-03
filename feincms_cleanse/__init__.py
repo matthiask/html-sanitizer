@@ -24,7 +24,6 @@ class Cleanse(object):
         'br': (),
         'sub': (),
         'sup': (),
-        'anything': (),
         }
 
     empty_tags = ('br',)
@@ -64,7 +63,7 @@ class Cleanse(object):
             doc = soupparser.fromstring(html)
 
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=self.allowed_tags.keys() + ['style'],
+            allow_tags=self.allowed_tags.keys() + ['style', 'anything'],
             remove_unknown_tags=False, # preserve surrounding 'anything' tag
             style=False, safe_attrs_only=False, # do not strip out style
                                                 # attributes; we still need
@@ -127,7 +126,7 @@ class Cleanse(object):
         # just to be sure, run cleaner again, but this time with even more
         # strict settings
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=self.allowed_tags.keys(),
+            allow_tags=self.allowed_tags.keys() + ['anything'],
             remove_unknown_tags=False, # preserve surrounding 'anything' tag
             style=True, safe_attrs_only=True
             )

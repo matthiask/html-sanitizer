@@ -79,7 +79,6 @@ class CleanseTestCase(TestCase):
 
         self.run_tests(entries)
 
-    @expectedFailure
     def test_07_configuration(self):
         class MyCleanse(Cleanse):
             allowed_tags = { 'h1': (), 'h2': () }
