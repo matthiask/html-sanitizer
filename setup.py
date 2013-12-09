@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
 import os
-import setuplib
+from setuptools import setup, find_packages
 
-packages, package_data = setuplib.find_packages('feincms_cleanse')
 
 setup(
     name='feincms-cleanse',
@@ -17,8 +15,19 @@ setup(
     url='http://github.com/feincms/feincms-cleanse/',
     license='BSD License',
     platforms=['OS Independent'],
-    packages=packages,
-    package_data=package_data,
+    packages=find_packages(),
+    package_data={
+        '': ['*.html', '*.txt'],
+        'feincms_cleanse': [
+            # 'locale/*/*/*.*',
+            # 'static/email_registration/*.*',
+            # 'static/email_registration/*/*.*',
+            # 'templates/*.*',
+            # 'templates/*/*.*',
+            # 'templates/*/*/*.*',
+            # 'templates/*/*/*/*.*',
+        ],
+    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
