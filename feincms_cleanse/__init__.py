@@ -1,7 +1,11 @@
 VERSION = (3,)
 __version__ = '.'.join(map(str, VERSION))
 
-from BeautifulSoup import BeautifulSoup
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    from BeautifulSoup import BeautifulSoup
+
 import lxml.html
 import lxml.html.clean
 import re

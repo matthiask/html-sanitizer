@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='feincms-cleanse',
-    version='3',
+    version='4',
     description='Default HTML cleansing in FeinCMS',
     long_description=open(
         os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
@@ -39,5 +39,5 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development',
     ],
-    install_requires=('lxml>=2.2', 'BeautifulSoup>=3'),
+    install_requires=('lxml>=3', 'beautifulsoup4'),
 )
