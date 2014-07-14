@@ -33,9 +33,9 @@ class CleanseTestCase(TestCase):
         entries = (
             ('<a href="/foo">foo</a>', None),
             (
-                '<a href="/foo" target="some" name="bar" title="baz"'
+                '<a href="/foo" name="bar" target="some" title="baz"'
                 ' cookies="yesplease">foo</a>',
-                '<a href="/foo" target="some" name="bar" title="baz">foo</a>'
+                '<a href="/foo" name="bar" target="some" title="baz">foo</a>'
             ),
             ('<a href="http://somewhere.else">foo</a>', None),
             ('<a href="https://somewhere.else">foo</a>', None),

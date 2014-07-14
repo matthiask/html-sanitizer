@@ -199,8 +199,13 @@ class Cleanse(object):
         html = re.sub(r'</?anything( /)?>', '', html)
 
         # nicify entities and normalize unicode
-        html = unicode(BeautifulSoup(html, convertEntities='xml'))
+        html = unicode(BeautifulSoup(html, 'lxml'))
         html = unicodedata.normalize('NFKC', html)
+        html = re.sub(r'^<html><body>', '', html)
+        html = re.sub(r'</body></html>$', '', html)
+
+        # add a space before the closing slash in empty tags
+        html = re.sub(r'<([^/>]+)/>', r'<\1 />', html)
 
         return html
 
