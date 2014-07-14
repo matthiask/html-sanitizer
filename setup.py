@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='feincms-cleanse',
-    version='4',
+    version='5',
     description='Default HTML cleansing in FeinCMS',
     long_description=open(
         os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
