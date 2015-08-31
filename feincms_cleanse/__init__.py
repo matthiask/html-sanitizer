@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 VERSION = (5,)
 __version__ = '.'.join(map(str, VERSION))
 
@@ -58,10 +60,10 @@ class Cleanse(object):
         Requires ``lxml`` and ``beautifulsoup``.
         """
 
-        html = u'<anything>%s</anything>' % html
+        html = '<anything>%s</anything>' % html
         doc = lxml.html.fromstring(html)
         try:
-            lxml.html.tostring(doc, encoding=unicode)
+            lxml.html.tostring(doc, encoding='utf-8')
         except UnicodeDecodeError:
             # fall back to slower BeautifulSoup if parsing failed
             from lxml.html import soupparser
@@ -157,9 +159,9 @@ class Cleanse(object):
 
         # merge tags
         for tag in self.merge_tags:
-            merge_str = u'\s*</%s>\s*<%s>\s*' % (tag, tag)
+            merge_str = '\s*</%s>\s*<%s>\s*' % (tag, tag)
             while True:
-                new = re.sub(merge_str, u' ', html)
+                new = re.sub(merge_str, ' ', html)
                 if new == html:
                     break
                 html = new
@@ -199,7 +201,7 @@ class Cleanse(object):
         html = re.sub(r'</?anything( /)?>', '', html)
 
         # nicify entities and normalize unicode
-        html = unicode(BeautifulSoup(html, 'lxml'))
+        html = '%s' % BeautifulSoup(html, 'lxml')
         html = unicodedata.normalize('NFKC', html)
         html = re.sub(r'^<html><body>', '', html)
         html = re.sub(r'</body></html>$', '', html)
