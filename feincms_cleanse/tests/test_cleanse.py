@@ -108,3 +108,12 @@ class CleanseTestCase(TestCase):
         )
 
         self.run_tests(entries)
+
+    def test_09_empty_p_text_in_li(self):
+        # this results in an empty p.text
+        entries = (
+            ('<li><p><strong>foo</strong></p></li>', '<li><strong>foo</strong></li>'),
+            ('<li><p><em>foo</em></p></li>', '<li><em>foo</em></li>'),
+        )
+
+        self.run_tests(entries)
