@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from unittest import TestCase
 
 from feincms_cleanse import Cleanse
@@ -11,20 +13,20 @@ class CleanseTestCase(TestCase):
             self.assertEqual(
                 result,
                 after,
-                u"Cleaning '%s', expected '%s' but got '%s'" % (
+                "Cleaning '%s', expected '%s' but got '%s'" % (
                     before, after, result))
 
     def test_01_cleanse(self):
         entries = [
-            (u'<p>&nbsp;</p>', u''),
-            (u'<p>           </p>', u''),
-            (u'<span style="font-weight: bold;">Something</span><p></p>',
-                u'<strong>Something</strong>'),
-            (u'<p>abc <span>def <em>ghi</em> jkl</span> mno</p>',
-                u'<p>abc def <em>ghi</em> jkl mno</p>'),
-            (u'<span style="font-style: italic;">Something</span><p></p>',
-                u'<em>Something</em>'),
-            (u'<p>abc<br />def</p>', u'<p>abc<br />def</p>'),
+            ('<p>&nbsp;</p>', ''),
+            ('<p>           </p>', ''),
+            ('<span style="font-weight: bold;">Something</span><p></p>',
+                '<strong>Something</strong>'),
+            ('<p>abc <span>def <em>ghi</em> jkl</span> mno</p>',
+                '<p>abc def <em>ghi</em> jkl mno</p>'),
+            ('<span style="font-style: italic;">Something</span><p></p>',
+                '<em>Something</em>'),
+            ('<p>abc<br />def</p>', '<p>abc<br />def</p>'),
             ]
 
         self.run_tests(entries)
@@ -70,7 +72,7 @@ class CleanseTestCase(TestCase):
     def test_05_p_in_p(self):
         entries = (
             ('<p><p>foo</p></p>', '<p>foo</p>'),
-            (u'<p><p><p>&nbsp;</p> </p><p><br /></p></p>', u''),
+            ('<p><p><p>&nbsp;</p> </p><p><br /></p></p>', ''),
             # This is actually correct as the second <p> implicitely
             # closes the first paragraph, and the trailing </p> is
             # deleted because it has no matching opening <p>
@@ -81,8 +83,8 @@ class CleanseTestCase(TestCase):
 
     def test_06_whitelist(self):
         entries = (
-            (u'<script src="http://abc">foo</script>', u''),
-            (u'<script type="text/javascript">foo</script>', u''),
+            ('<script src="http://abc">foo</script>', ''),
+            ('<script type="text/javascript">foo</script>', ''),
         )
 
         self.run_tests(entries)
