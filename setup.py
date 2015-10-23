@@ -40,4 +40,5 @@ setup(
         'Topic :: Software Development',
     ],
     install_requires=('lxml>=3', 'beautifulsoup4'),
+    test_suite='feincms_cleanse.tests',
 )
