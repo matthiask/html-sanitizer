@@ -2,6 +2,9 @@
 feincms-cleanse
 ===============
 
+.. image:: https://travis-ci.org/feincms/feincms-cleanse.svg?branch=master
+    :target: https://travis-ci.org/feincms/feincms-cleanse
+
 This is the FeinCMS HTML cleansing function which lived under the name of
 ``feincms.utils.html.cleanse.cleanse_html``, and has been moved to
 its own repository now to be usable in other projects, and to not set a
