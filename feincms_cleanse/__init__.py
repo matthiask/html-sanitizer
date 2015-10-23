@@ -114,7 +114,7 @@ class Cleanse(object):
             elif element.tag == 'li':
                 # remove p-in-li tags
                 for p in element.findall('p'):
-                    p.text = ' ' + getattr(p, 'text', '') + ' '
+                    p.text = ' ' + (getattr(p, 'text', '') or '') + ' '
                     p.drop_tag()
 
             # Hook for custom filters:
