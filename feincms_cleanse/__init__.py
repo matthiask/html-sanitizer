@@ -45,7 +45,8 @@ class Cleanse(object):
         This is a stupid check, which probably should be much more elaborate
         to be safe.
         """
-        return href.startswith(('/', 'mailto:', 'http:', 'https:', '#'))
+        return href.startswith(
+            ('/', 'mailto:', 'http:', 'https:', '#', 'tel:'))
 
     def clean(self, element):
         """ Hook for your own clean methods. """
