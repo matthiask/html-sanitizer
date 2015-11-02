@@ -43,6 +43,8 @@ class CleanseTestCase(TestCase):
             ('<a href="https://somewhere.else">foo</a>', None),
             ('<a href="javascript:alert()">foo</a>', '<a href="">foo</a>'),
             ('<a href="javascript%3Aalert()">foo</a>', '<a href="">foo</a>'),
+            ('<a href="mailto:foo@bar.com">foo</a>', None),
+            ('<a href="tel:1-234-567-890">foo</a>', None),
         )
 
         self.run_tests(entries)
