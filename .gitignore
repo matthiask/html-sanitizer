@@ -10,3 +10,5 @@
 /_build
 /build
 /dist
+.eggs
+feincms_cleanse.egg-info
