@@ -1,8 +1,5 @@
 from __future__ import unicode_literals
 
-VERSION = (7,)
-__version__ = '.'.join(map(str, VERSION))
-
 try:
     from bs4 import BeautifulSoup
 except ImportError:
@@ -13,6 +10,9 @@ import lxml.html.clean
 import re
 import unicodedata
 
+
+VERSION = (7,)
+__version__ = '.'.join(map(str, VERSION))
 
 __all__ = ('cleanse_html', 'Cleanse')
 
