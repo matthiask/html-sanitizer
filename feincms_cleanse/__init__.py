@@ -11,7 +11,7 @@ import re
 import unicodedata
 
 
-VERSION = (7,)
+VERSION = (8,)
 __version__ = '.'.join(map(str, VERSION))
 
 __all__ = ('cleanse_html', 'Cleanse')
