@@ -3,7 +3,6 @@ cache: pip
 sudo: false
 python:
   - "2.7"
-  - "3.2"
   - "3.4"
 script:
   - pip install -U pip wheel
