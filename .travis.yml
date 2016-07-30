@@ -6,6 +6,7 @@ python:
   - "3.2"
   - "3.4"
 script:
+  - pip install -U pip wheel
   - CFLAGS="-O0" pip install flake8 lxml beautifulsoup4
   # - python setup.py install
   - ./setup.py test && flake8 .
