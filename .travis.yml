@@ -4,8 +4,10 @@ sudo: false
 python:
   - "2.7"
   - "3.4"
+  - "3.5"
+  - "3.6"
 script:
   - pip install -U pip wheel
-  - CFLAGS="-O0" pip install flake8 lxml beautifulsoup4
+  - pip install flake8 lxml beautifulsoup4
   # - python setup.py install
   - ./setup.py test && flake8 .
