@@ -1,10 +1,6 @@
 from __future__ import unicode_literals
 
-try:
-    from bs4 import BeautifulSoup
-except ImportError:
-    from BeautifulSoup import BeautifulSoup
-
+from bs4 import BeautifulSoup
 import lxml.html
 import lxml.html.clean
 import re
