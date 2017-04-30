@@ -2,8 +2,8 @@
 html sanitizer
 ==============
 
-.. image:: https://travis-ci.org/feincms/feincms-cleanse.svg?branch=master
-    :target: https://travis-ci.org/feincms/feincms-cleanse
+.. image:: https://travis-ci.org/matthiask/html-sanitizer.svg?branch=master
+    :target: https://travis-ci.org/matthiask/html-sanitizer
 
 This is the FeinCMS HTML cleansing function which lived under the name of
 ``feincms.utils.html.cleanse.cleanse_html``, and has been moved to
