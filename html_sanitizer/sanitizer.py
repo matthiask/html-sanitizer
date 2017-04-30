@@ -110,9 +110,11 @@ class Sanitizer(object):
 
         cleaner(doc)
 
+        backlog = reversed(list(doc.iterdescendants()))
+
         # walk the tree recursively, because we want to be able to remove
         # previously emptied elements completely
-        for element in reversed(list(doc.iterdescendants())):
+        for element in backlog:
             # convert span elements into em/strong if a matching style rule
             # has been found. strong has precedence, strong & em at the same
             # time is not supported
@@ -129,11 +131,32 @@ class Sanitizer(object):
                     element.drop_tag()
                     continue
 
+            whitespace_re = re.compile(r'^(\&nbsp;|\&#160;|\s|\xa0)*$')
+            if element.text or element.tail:
+                # remove elements containing only whitespace or linebreaks
+                while True:
+                    text = whitespace_re.sub('', element.text or '')
+                    if element.text == text:
+                        break
+                    element.text = text
+
+                while True:
+                    text = whitespace_re.sub('', element.tail or '')
+                    if element.tail == text:
+                        break
+                    element.tail = text
+
             # remove empty tags if they are not explicitly allowed
-            elif (not element.text and
-                  element.tag not in self.empty and
-                  not len(element)):
+            if (not element.text and
+                    element.tag not in self.empty and
+                    not len(element)):
                 element.drop_tag()
+                continue
+
+            if (whitespace_re.match(element.text or '') and
+                    {e.tag for e in element} == {'br'} and
+                    all(whitespace_re.match(e.tail or '') for e in element)):
+                element.drop_tree()
                 continue
 
             elif element.tag == 'li':
@@ -149,6 +172,17 @@ class Sanitizer(object):
                         r'^(\&nbsp;|\&#160;|\s)*(-|\*|&#183;)(\&nbsp;|\&#160;|\s)+',  # noqa
                         '',
                         element.text)
+
+            elif element.tag == 'br':
+                nx = element.getnext()
+                if nx is not None and nx.tag == 'br':
+                    nx.drop_tag()
+                    continue
+
+            if not element.text:
+                first = list(element)[0] if list(element) else None
+                if first is not None and first.tag == 'br':
+                    first.drop_tag()
 
             # Hook for custom filters:
             element = self.clean(element)
@@ -174,16 +208,7 @@ class Sanitizer(object):
 
         cleaner(doc)
 
-        html = lxml.html.tostring(doc, method='xml').decode('utf-8')
-
-        # remove elements containing only whitespace or linebreaks
-        whitespace_re = re.compile(
-            r'<([a-z0-9]+)>(<br\s*/>|\&nbsp;|\&#160;|\s)*</\1>')
-        while True:
-            new = whitespace_re.sub('', html)
-            if new == html:
-                break
-            html = new
+        html = lxml.html.tostring(doc, method='html').decode('utf-8')
 
         # merge tags
         for tag in (self.tags - self.separate):

@@ -27,7 +27,16 @@ class SanitizerTestCase(TestCase):
             ('<span style="font-style: italic;">Something</span><p></p>',
                 '<em>Something</em>'),
             ('<p>abc<br />def</p>', '<p>abc<br />def</p>'),
-            ]
+            ('<p><br/><strong></strong>  <br/></p>', ''),
+            (
+                '<p><br/><strong></strong>  <br/> abc</p>',
+                '<p> abc</p>',
+            ),
+            (
+                '<li><br>bla</li>',
+                '<li>bla</li>',
+            ),
+        ]
 
         self.run_tests(entries)
 
@@ -60,7 +69,7 @@ class SanitizerTestCase(TestCase):
     def test_04_p_in_li(self):
         entries = (
             ('<li><p>foo</p></li>', '<li> foo </li>'),
-            ('<li>&nbsp;<p>foo</p> &#160; </li>', '<li>  foo    </li>'),
+            ('<li>&nbsp;<p>foo</p> &#160; </li>', '<li> foo </li>'),
             (
                 '<li>foo<p>bar<strong>xx</strong>rab</p><strong>baz</strong>'
                 'a<p>b</p>c</li>',
