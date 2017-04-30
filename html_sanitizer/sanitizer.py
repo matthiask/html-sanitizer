@@ -57,15 +57,18 @@ class Sanitizer(object):
         if 'span' in self.tags:
             raise TypeError('"span" is not allowed in "tags"')
 
-    def validate_href(self, href):
+    def sanitize_href(self, href):
         """
         Verify that a given href is benign and allowed.
 
         This is a stupid check, which probably should be much more elaborate
         to be safe.
         """
-        return href.startswith(
-            ('/', 'mailto:', 'http:', 'https:', '#', 'tel:'))
+        if href.startswith(
+            ('/', 'mailto:', 'http:', 'https:', '#', 'tel:')
+        ):
+            return href
+        return '#'
 
     def clean(self, element):
         """ Hook for your own clean methods. """
@@ -150,8 +153,8 @@ class Sanitizer(object):
 
             # Clean hrefs so that they are benign
             href = element.get('href')
-            if href is not None and not self.validate_href(href):
-                element.set('href', '#')
+            if href is not None:
+                element.set('href', self.sanitize_href(href))
 
         # just to be sure, run cleaner again, but this time with even more
         # strict settings
