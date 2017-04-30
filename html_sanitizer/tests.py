@@ -2,21 +2,21 @@ from __future__ import unicode_literals
 
 from unittest import TestCase
 
-from feincms_cleanse import Cleanse
+from html_sanitizer import Sanitizer
 
 
-class CleanseTestCase(TestCase):
-    def run_tests(self, entries, klass=Cleanse):
+class SanitizerTestCase(TestCase):
+    def run_tests(self, entries, sanitizer=Sanitizer()):
         for before, after in entries:
             after = before if after is None else after
-            result = klass().cleanse(before)
+            result = sanitizer.sanitize(before)
             self.assertEqual(
                 result,
                 after,
                 "Cleaning '%s', expected '%s' but got '%s'" % (
                     before, after, result))
 
-    def test_01_cleanse(self):
+    def test_01_sanitize(self):
         entries = [
             ('<p>&nbsp;</p>', ''),
             ('<p>           </p>', ''),
@@ -92,8 +92,12 @@ class CleanseTestCase(TestCase):
         self.run_tests(entries)
 
     def test_07_configuration(self):
-        class MyCleanse(Cleanse):
-            allowed_tags = {'h1': (), 'h2': ()}
+        sanitizer = Sanitizer({
+            'tags': {'h1', 'h2'},
+            'empty': set(),
+            'separate': set(),
+            'attributes': {},
+        })
 
         entries = (
             ('<h1>foo</h1>', None),
@@ -103,7 +107,7 @@ class CleanseTestCase(TestCase):
             ),
         )
 
-        self.run_tests(entries, klass=MyCleanse)
+        self.run_tests(entries, sanitizer=sanitizer)
 
     def test_08_li_with_marker(self):
         entries = (

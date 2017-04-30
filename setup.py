@@ -5,14 +5,14 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='feincms-cleanse',
-    version='8',
-    description='Default HTML cleansing in FeinCMS',
+    name='html-sanitizer',
+    version=__import__('html_sanitizer').__version__,
+    description='HTML sanitizer',
     long_description=open(
         os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
     author='Matthias Kestenholz',
     author_email='mk@feinheit.ch',
-    url='http://github.com/feincms/feincms-cleanse/',
+    url='https://github.com/matthiask/html-sanitizer/',
     license='BSD License',
     platforms=['OS Independent'],
     packages=find_packages(),
@@ -29,5 +29,5 @@ setup(
         'Topic :: Software Development',
     ],
     install_requires=('lxml>=3', 'beautifulsoup4'),
-    test_suite='feincms_cleanse.tests',
+    test_suite='html_sanitizer.tests',
 )

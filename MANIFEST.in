@@ -1,6 +1,3 @@
 include LICENSE
 include MANIFEST.in
 include README.rst
-recursive-include feincms_cleanse/static *
-recursive-include feincms_cleanse/locale *
-recursive-include feincms_cleanse/templates *

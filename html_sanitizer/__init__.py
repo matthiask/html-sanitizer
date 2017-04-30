@@ -7,47 +7,63 @@ import re
 import unicodedata
 
 
-VERSION = (8,)
+VERSION = (1, 0, 0)
 __version__ = '.'.join(map(str, VERSION))
 
-__all__ = ('cleanse_html', 'Cleanse')
+__all__ = ('Sanitizer',)
 
 
-class Cleanse(object):
-    allowed_tags = {
-        'a': ('href', 'name', 'target', 'title'),
-        'h2': (),
-        'h3': (),
-        'strong': (),
-        'em': (),
-        'p': (),
-        'ul': (),
-        'ol': (),
-        'li': (),
-        'span': (),
-        'br': (),
-        'sub': (),
-        'sup': (),
-    }
+DEFAULT_SETTINGS = {
+    'tags': {
+        'a',
+        'h1',
+        'h2',
+        'h3',
+        'strong',
+        'em',
+        'p',
+        'ul',
+        'ol',
+        'li',
+        'span',
+        'br',
+        'sub',
+        'sup',
+        'pre',
+        'hr',
+    },
+    'attributes': {
+        'a': ('href', 'name', 'target', 'title', 'id'),
+    },
+    'empty': {'hr', 'a', 'br'},
+    'separate': {'a', 'p', 'li'},
+}
 
-    empty_tags = ('br',)
 
-    merge_tags = ('h2', 'h3', 'strong', 'em', 'ul', 'ol', 'sub', 'sup')
+class SimpleNamespace(dict):
+    def __getattr__(self, key):
+        return self[key]
 
-    def __init__(self, allowed_tags=None, allowed_attributes=None,
-                 keep_empty=None, keep_separate=None):
 
-        if allowed_tags is not None:
-            self.allowed_tags = dict.fromkeys(allowed_tags, ())
-        if allowed_attributes is not None:
-            self.allowed_tags.update(allowed_attributes)
-        if keep_empty is not None:
-            self.empty_tags = keep_empty
-        if keep_separate is not None:
-            # Merge all that are not kept separate
-            self.merge_tags = tuple(
-                set(self.allowed_tags).difference(keep_separate)
-            )
+class Sanitizer(object):
+    def __init__(self, settings=None):
+        self.settings = SimpleNamespace()
+        self.settings.update(DEFAULT_SETTINGS)
+        self.settings.update(settings or {})
+
+        # Validate the settings.
+        if not self.settings.tags.issuperset(self.settings.empty):
+            raise TypeError('Tags in "empty", but not allowed: %r' % (
+                self.settings.empty - self.settings.tags,
+            ))
+        if not self.settings.tags.issuperset(self.settings.separate):
+            raise TypeError('Tags in "separate", but not allowed: %r' % (
+                self.settings.separate - self.settings.tags,
+            ))
+        if not self.settings.tags.issuperset(self.settings.attributes.keys()):
+            raise TypeError('Tags in "attributes", but not allowed: %r' % (
+                set(self.settings.attributes.keys()) - self.settings.tags,
+            ))
 
     def validate_href(self, href):
         """
@@ -63,7 +79,7 @@ class Cleanse(object):
         """ Hook for your own clean methods. """
         return element
 
-    def cleanse(self, html):
+    def sanitize(self, html):
         """
         Clean HTML code from ugly copy-pasted CSS and empty elements
 
@@ -82,7 +98,7 @@ class Cleanse(object):
             doc = soupparser.fromstring(html)
 
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=list(self.allowed_tags.keys()) + ['anything'],
+            allow_tags=list(self.settings.tags) + ['anything'],
             remove_unknown_tags=False,  # preserve surrounding 'anything' tag
             # Remove style *tags*
             style=True,
@@ -119,7 +135,7 @@ class Cleanse(object):
 
             # remove empty tags if they are not <br />
             elif (not element.text and
-                  element.tag not in self.empty_tags and
+                  element.tag not in self.settings.empty and
                   not len(element)):
                 element.drop_tag()
                 continue
@@ -135,7 +151,7 @@ class Cleanse(object):
             element = self.clean(element)
 
             # remove all attributes which are not explicitly allowed
-            allowed = self.allowed_tags.get(element.tag, [])
+            allowed = self.settings.attributes.get(element.tag, [])
             for key in element.attrib.keys():
                 if key not in allowed:
                     del element.attrib[key]
@@ -148,7 +164,7 @@ class Cleanse(object):
         # just to be sure, run cleaner again, but this time with even more
         # strict settings
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=list(self.allowed_tags.keys()) + ['anything'],
+            allow_tags=list(self.settings.tags) + ['anything'],
             remove_unknown_tags=False,  # preserve surrounding 'anything' tag
             safe_attrs_only=True,
         )
@@ -172,7 +188,7 @@ class Cleanse(object):
             html = new
 
         # merge tags
-        for tag in self.merge_tags:
+        for tag in (self.settings.tags - self.settings.separate):
             merge_str = '\s*</%s>\s*<%s>\s*' % (tag, tag)
             while True:
                 new = re.sub(merge_str, ' ', html)
@@ -184,7 +200,7 @@ class Cleanse(object):
         p_in_p_start_re = re.compile(r'<p>(\&nbsp;|\&#160;|\s)*<p>')
         p_in_p_end_re = re.compile('</p>(\&nbsp;|\&#160;|\s)*</p>')
 
-        for tag in self.merge_tags:
+        for tag in (self.settings.tags - self.settings.separate):
             merge_start_re = re.compile(
                 '<p>(\\&nbsp;|\\&#160;|\\s)*<%s>(\\&nbsp;|\\&#160;|\\s)*<p>'
                 % tag)

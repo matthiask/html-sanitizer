@@ -1,6 +1,6 @@
-===============
-feincms-cleanse
-===============
+==============
+html sanitizer
+==============
 
 .. image:: https://travis-ci.org/feincms/feincms-cleanse.svg?branch=master
     :target: https://travis-ci.org/feincms/feincms-cleanse
@@ -12,7 +12,7 @@ precedent for a particular HTML cleaning technique in FeinCMS anymore.
 
 Usage is simple::
 
-    from feincms_cleanse import cleanse_html
-
-    >>> cleanse_html(u'<span style="font-weight:bold">some text</span>')
-    u'<strong>some text</strong>'
+    >>> from html_sanitizer import Sanitizer
+    >>> sanitizer = Sanitizer()  # default configuration
+    >>> sanitizer.sanitize('<span style="font-weight:bold">some text</span>')
+    '<strong>some text</strong>'
