@@ -40,29 +40,23 @@ DEFAULT_SETTINGS = {
 }
 
 
-class SimpleNamespace(dict):
-    def __getattr__(self, key):
-        return self[key]
-
-
 class Sanitizer(object):
     def __init__(self, settings=None):
-        self.settings = SimpleNamespace()
-        self.settings.update(DEFAULT_SETTINGS)
-        self.settings.update(settings or {})
+        self.__dict__.update(DEFAULT_SETTINGS)
+        self.__dict__.update(settings or {})
 
         # Validate the settings.
-        if not self.settings.tags.issuperset(self.settings.empty):
+        if not self.tags.issuperset(self.empty):
             raise TypeError('Tags in "empty", but not allowed: %r' % (
-                self.settings.empty - self.settings.tags,
+                self.empty - self.tags,
             ))
-        if not self.settings.tags.issuperset(self.settings.separate):
+        if not self.tags.issuperset(self.separate):
             raise TypeError('Tags in "separate", but not allowed: %r' % (
-                self.settings.separate - self.settings.tags,
+                self.separate - self.tags,
             ))
-        if not self.settings.tags.issuperset(self.settings.attributes.keys()):
+        if not self.tags.issuperset(self.attributes.keys()):
             raise TypeError('Tags in "attributes", but not allowed: %r' % (
-                set(self.settings.attributes.keys()) - self.settings.tags,
+                set(self.attributes.keys()) - self.tags,
             ))
 
     def validate_href(self, href):
@@ -98,7 +92,7 @@ class Sanitizer(object):
             doc = soupparser.fromstring(html)
 
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=list(self.settings.tags) + ['anything'],
+            allow_tags=list(self.tags) + ['anything'],
             remove_unknown_tags=False,  # preserve surrounding 'anything' tag
             # Remove style *tags*
             style=True,
@@ -135,7 +129,7 @@ class Sanitizer(object):
 
             # remove empty tags if they are not <br />
             elif (not element.text and
-                  element.tag not in self.settings.empty and
+                  element.tag not in self.empty and
                   not len(element)):
                 element.drop_tag()
                 continue
@@ -151,7 +145,7 @@ class Sanitizer(object):
             element = self.clean(element)
 
             # remove all attributes which are not explicitly allowed
-            allowed = self.settings.attributes.get(element.tag, [])
+            allowed = self.attributes.get(element.tag, [])
             for key in element.attrib.keys():
                 if key not in allowed:
                     del element.attrib[key]
@@ -164,7 +158,7 @@ class Sanitizer(object):
         # just to be sure, run cleaner again, but this time with even more
         # strict settings
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=list(self.settings.tags) + ['anything'],
+            allow_tags=list(self.tags) + ['anything'],
             remove_unknown_tags=False,  # preserve surrounding 'anything' tag
             safe_attrs_only=True,
         )
@@ -188,7 +182,7 @@ class Sanitizer(object):
             html = new
 
         # merge tags
-        for tag in (self.settings.tags - self.settings.separate):
+        for tag in (self.tags - self.separate):
             merge_str = '\s*</%s>\s*<%s>\s*' % (tag, tag)
             while True:
                 new = re.sub(merge_str, ' ', html)
@@ -200,7 +194,7 @@ class Sanitizer(object):
         p_in_p_start_re = re.compile(r'<p>(\&nbsp;|\&#160;|\s)*<p>')
         p_in_p_end_re = re.compile('</p>(\&nbsp;|\&#160;|\s)*</p>')
 
-        for tag in (self.settings.tags - self.settings.separate):
+        for tag in (self.tags - self.separate):
             merge_start_re = re.compile(
                 '<p>(\\&nbsp;|\\&#160;|\\s)*<%s>(\\&nbsp;|\\&#160;|\\s)*<p>'
                 % tag)
@@ -240,13 +234,3 @@ class Sanitizer(object):
         html = re.sub(r'<([^/>]+)/>', r'<\1 />', html)
 
         return html
-
-
-# ------------------------------------------------------------------------
-def cleanse_html(html):
-    """
-    Compat shim for older cleanse API
-    """
-    return Cleanse().cleanse(html)
-
-# ------------------------------------------------------------------------
