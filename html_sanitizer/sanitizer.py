@@ -113,10 +113,6 @@ class Sanitizer(object):
         # walk the tree recursively, because we want to be able to remove
         # previously emptied elements completely
         for element in reversed(list(doc.iterdescendants())):
-            if element.tag == 'style':
-                element.drop_tree()
-                continue
-
             # convert span elements into em/strong if a matching style rule
             # has been found. strong has precedence, strong & em at the same
             # time is not supported
