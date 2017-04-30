@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from unittest import TestCase
 
-from html_sanitizer import Sanitizer
+from .sanitizer import Sanitizer
 
 
 class SanitizerTestCase(TestCase):
