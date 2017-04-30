@@ -116,7 +116,7 @@ class Sanitizer(object):
             # convert span elements into em/strong if a matching style rule
             # has been found. strong has precedence, strong & em at the same
             # time is not supported
-            elif element.tag == 'span':
+            if element.tag == 'span':
                 style = element.get('style')
                 if style:
                     if 'bold' in style:
@@ -142,6 +142,13 @@ class Sanitizer(object):
                     if getattr(p, 'text', None):
                         p.text = ' ' + p.text + ' '
                     p.drop_tag()
+
+                # remove list markers
+                if element.text:
+                    element.text = re.sub(
+                        r'^(\&nbsp;|\&#160;|\s)*(-|\*|&#183;)(\&nbsp;|\&#160;|\s)+',  # noqa
+                        '',
+                        element.text)
 
             # Hook for custom filters:
             element = self.clean(element)
@@ -208,12 +215,6 @@ class Sanitizer(object):
                 if new == html:
                     break
                 html = new
-
-        # remove list markers with <li> tags before them
-        html = re.sub(
-            r'<li>(\&nbsp;|\&#160;|\s)*(-|\*|&#183;)(\&nbsp;|\&#160;|\s)+',
-            '<li>',
-            html)
 
         # add a space before the closing slash in empty tags
         html = re.sub(r'<([^/>]+)/>', r'<\1 />', html)
