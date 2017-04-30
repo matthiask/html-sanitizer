@@ -83,6 +83,11 @@ class Sanitizer(object):
         Requires ``lxml`` and ``beautifulsoup``.
         """
 
+        # remove all sorts of newline characters
+        html = html.replace('\n', ' ').replace('\r', ' ')
+        html = html.replace('&#10;', ' ').replace('&#13;', ' ')
+        html = html.replace('&#xa;', ' ').replace('&#xd;', ' ')
+
         html = '<anything>%s</anything>' % html
         doc = lxml.html.fromstring(html)
         try:
@@ -167,11 +172,6 @@ class Sanitizer(object):
         cleaner(doc)
 
         html = lxml.html.tostring(doc, method='xml').decode('utf-8')
-
-        # remove all sorts of newline characters
-        html = html.replace('\n', ' ').replace('\r', ' ')
-        html = html.replace('&#10;', ' ').replace('&#13;', ' ')
-        html = html.replace('&#xa;', ' ').replace('&#xd;', ' ')
 
         # remove elements containing only whitespace or linebreaks
         whitespace_re = re.compile(
