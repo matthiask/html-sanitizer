@@ -22,7 +22,6 @@ DEFAULT_SETTINGS = {
         'ul',
         'ol',
         'li',
-        'span',
         'br',
         'sub',
         'sup',
@@ -55,6 +54,8 @@ class Sanitizer(object):
             raise TypeError('Tags in "attributes", but not allowed: %r' % (
                 set(self.attributes.keys()) - self.tags,
             ))
+        if 'span' in self.tags:
+            raise TypeError('"span" is not allowed in "tags"')
 
     def validate_href(self, href):
         """
@@ -89,7 +90,7 @@ class Sanitizer(object):
             doc = soupparser.fromstring(html)
 
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=list(self.tags) + ['anything'],
+            allow_tags=list(self.tags) + ['anything', 'span'],
             remove_unknown_tags=False,  # preserve surrounding 'anything' tag
             # Remove style *tags*
             style=True,

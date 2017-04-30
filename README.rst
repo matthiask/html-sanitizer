@@ -16,3 +16,9 @@ Usage is simple::
     >>> sanitizer = Sanitizer()  # default configuration
     >>> sanitizer.sanitize('<span style="font-weight:bold">some text</span>')
     '<strong>some text</strong>'
+
+Notes about settings:
+
+- ``span``s will always be removed from the tree, but only after
+  inspecting their style tags (bold spans are converted into ``strong``
+  tags, italic spans into ``em`` tags)
