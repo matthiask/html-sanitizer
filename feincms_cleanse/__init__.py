@@ -34,6 +34,21 @@ class Cleanse(object):
 
     merge_tags = ('h2', 'h3', 'strong', 'em', 'ul', 'ol', 'sub', 'sup')
 
+    def __init__(self, allowed_tags=None, allowed_attributes=None,
+                 keep_empty=None, keep_separate=None):
+
+        if allowed_tags is not None:
+            self.allowed_tags = dict.fromkeys(allowed_tags, ())
+        if allowed_attributes is not None:
+            self.allowed_tags.update(allowed_attributes)
+        if keep_empty is not None:
+            self.empty_tags = keep_empty
+        if keep_separate is not None:
+            # Merge all that are not kept separate
+            self.merge_tags = tuple(
+                set(self.allowed_tags).difference(keep_separate)
+            )
+
     def validate_href(self, href):
         """
         Verify that a given href is benign and allowed.
@@ -67,14 +82,15 @@ class Cleanse(object):
             doc = soupparser.fromstring(html)
 
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=list(self.allowed_tags.keys()) + ['style', 'anything'],
+            allow_tags=list(self.allowed_tags.keys()) + ['anything'],
             remove_unknown_tags=False,  # preserve surrounding 'anything' tag
-            style=False, safe_attrs_only=False,  # do not strip out style
-                                                 # attributes; we still need
-                                                 # the style information to
-                                                 # convert spans into em/strong
-                                                 # tags
-            )
+            # Remove style *tags*
+            style=True,
+            # Do not strip out style attributes; we still need the style
+            # information to convert spans into em/strong tags
+            safe_attrs_only=False,
+            inline_style=False,
+        )
 
         cleaner(doc)
 
@@ -134,7 +150,7 @@ class Cleanse(object):
         cleaner = lxml.html.clean.Cleaner(
             allow_tags=list(self.allowed_tags.keys()) + ['anything'],
             remove_unknown_tags=False,  # preserve surrounding 'anything' tag
-            style=True, safe_attrs_only=True
+            safe_attrs_only=True,
         )
 
         cleaner(doc)
