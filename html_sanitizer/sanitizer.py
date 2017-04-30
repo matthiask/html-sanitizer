@@ -113,7 +113,7 @@ class Sanitizer(object):
             # has been found. strong has precedence, strong & em at the same
             # time is not supported
             elif element.tag == 'span':
-                style = element.attrib.get('style')
+                style = element.get('style')
                 if style:
                     if 'bold' in style:
                         element.tag = 'strong'
@@ -125,7 +125,7 @@ class Sanitizer(object):
                     element.drop_tag()
                     continue
 
-            # remove empty tags if they are not <br />
+            # remove empty tags if they are not explicitly allowed
             elif (not element.text and
                   element.tag not in self.empty and
                   not len(element)):
@@ -144,14 +144,14 @@ class Sanitizer(object):
 
             # remove all attributes which are not explicitly allowed
             allowed = self.attributes.get(element.tag, [])
-            for key in element.attrib.keys():
+            for key in element.keys():
                 if key not in allowed:
                     del element.attrib[key]
 
             # Clean hrefs so that they are benign
-            href = element.attrib.get('href', None)
+            href = element.get('href')
             if href is not None and not self.validate_href(href):
-                element.attrib['href'] = ''
+                element.set('href', '#')
 
         # just to be sure, run cleaner again, but this time with even more
         # strict settings
