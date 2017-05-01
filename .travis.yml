@@ -8,6 +8,5 @@ python:
   - "3.6"
 script:
   - pip install -U pip wheel
-  - pip install flake8 lxml beautifulsoup4
-  # - python setup.py install
+  - pip install flake8 lxml html5lib
   - ./setup.py test && flake8 .

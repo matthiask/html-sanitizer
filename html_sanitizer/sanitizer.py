@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-from bs4 import BeautifulSoup
 import lxml.html
 import lxml.html.clean
 import re
@@ -33,6 +32,7 @@ DEFAULT_SETTINGS = {
     },
     'empty': {'hr', 'a', 'br'},
     'separate': {'a', 'p', 'li'},
+    'add_nofollow': False,
 }
 
 
@@ -80,7 +80,7 @@ class Sanitizer(object):
 
         Removes everything not explicitly allowed in ``self.allowed_tags``.
 
-        Requires ``lxml`` and ``beautifulsoup``.
+        Requires ``lxml`` and, for especially broken HTML, ``html5lib``.
         """
 
         # remove all sorts of newline characters
@@ -93,28 +93,26 @@ class Sanitizer(object):
         try:
             lxml.html.tostring(doc, encoding='utf-8')
         except UnicodeDecodeError:
-            # fall back to slower BeautifulSoup if parsing failed
-            from lxml.html import soupparser
-            doc = soupparser.fromstring(html)
+            from lxml.html import html5parser
+            doc = html5parser.fromstring(html)
 
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=list(self.tags) + ['anything', 'span'],
-            remove_unknown_tags=False,  # preserve surrounding 'anything' tag
+            allow_tags=self.tags | {'anything', 'span'},
+            remove_unknown_tags=False,
             # Remove style *tags*
             style=True,
             # Do not strip out style attributes; we still need the style
             # information to convert spans into em/strong tags
             safe_attrs_only=False,
             inline_style=False,
+            add_nofollow=self.add_nofollow,
         )
 
         cleaner(doc)
 
-        backlog = reversed(list(doc.iterdescendants()))
-
         # walk the tree recursively, because we want to be able to remove
         # previously emptied elements completely
-        for element in backlog:
+        for element in reversed(list(doc.iterdescendants())):
             # convert span elements into em/strong if a matching style rule
             # has been found. strong has precedence, strong & em at the same
             # time is not supported
@@ -201,9 +199,10 @@ class Sanitizer(object):
         # just to be sure, run cleaner again, but this time with even more
         # strict settings
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=list(self.tags) + ['anything'],
-            remove_unknown_tags=False,  # preserve surrounding 'anything' tag
+            allow_tags=self.tags | {'anything'},
+            remove_unknown_tags=False,
             safe_attrs_only=True,
+            add_nofollow=self.add_nofollow,
         )
 
         cleaner(doc)
@@ -247,13 +246,7 @@ class Sanitizer(object):
         # remove wrapping tag needed by XML parser
         html = re.sub(r'</?anything( /)?>', '', html)
 
-        # nicify entities and normalize unicode
-        html = '%s' % BeautifulSoup(html, 'lxml')
+        # normalize unicode
         html = unicodedata.normalize('NFKC', html)
-        html = re.sub(r'^<html><body>', '', html)
-        html = re.sub(r'</body></html>$', '', html)
-
-        # add a space before the closing slash in empty tags
-        html = re.sub(r'<([^/>]+)/>', r'<\1 />', html)
 
         return html

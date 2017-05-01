@@ -26,7 +26,7 @@ class SanitizerTestCase(TestCase):
                 '<p>abc def <em>ghi</em> jkl mno</p>'),
             ('<span style="font-style: italic;">Something</span><p></p>',
                 '<em>Something</em>'),
-            ('<p>abc<br />def</p>', '<p>abc<br />def</p>'),
+            ('<p>abc<br />def</p>', '<p>abc<br>def</p>'),
             ('<p><br/><strong></strong>  <br/></p>', ''),
             (
                 '<p><br/><strong></strong>  <br/> abc</p>',
@@ -140,3 +140,32 @@ class SanitizerTestCase(TestCase):
         )
 
         self.run_tests(entries)
+
+    def test_10_broken_html(self):
+        entries = (
+            (
+                '<p><strong>bla',
+                '<p><strong>bla</strong></p>',
+            ),
+            (
+                '<p><strong>bla<>/dsiad<p/',
+                '<p><strong>bla&lt;&gt;/dsiad</strong></p>',
+            ),
+        )
+
+        self.run_tests(entries)
+
+    def test_11_nofollow(self):
+        sanitizer = Sanitizer({
+            'add_nofollow': True,
+        })
+
+        entries = (
+            (
+                '<p><a href="http://example.com/">example.com</a></p>',
+                '<p><a href="http://example.com/"'
+                ' rel="nofollow">example.com</a></p>',
+            ),
+        )
+
+        self.run_tests(entries, sanitizer=sanitizer)
