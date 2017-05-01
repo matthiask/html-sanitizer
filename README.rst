@@ -52,7 +52,7 @@ The default settings are::
     DEFAULT_SETTINGS = {
         'tags': {
             'a', 'h1', 'h2', 'h3', 'strong', 'em', 'p', 'ul', 'ol',
-            'li', 'br', 'sub', 'sup', 'pre', 'hr',
+            'li', 'br', 'sub', 'sup', 'hr',
         },
         'attributes': {
             'a': ('href', 'name', 'target', 'title', 'id'),
@@ -77,6 +77,12 @@ example for an even more restricted configuration might be::
     ...     'separate': set(),
     ... })
 
+The rationale for such a restricted set of allowed tags (e.g. no
+images) is documented in the `design decisions`_ section of
+django-content-editor_'s documentation.
+
 .. _Django: https://www.djangoproject.com/
+.. _django-content-editor: http://django-content-editor.readthedocs.io/
 .. _FeinCMS: https://pypi.python.org/pypi/FeinCMS
 .. _feincms-cleanse: https://pypi.python.org/pypi/feincms-cleanse
+.. _design decisions: http://django-content-editor.readthedocs.io/en/latest/#design-decisions

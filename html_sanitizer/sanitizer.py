@@ -25,7 +25,6 @@ DEFAULT_SETTINGS = {
         'br',
         'sub',
         'sup',
-        'pre',
         'hr',
     },
     'attributes': {
