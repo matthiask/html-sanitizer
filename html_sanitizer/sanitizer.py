@@ -36,6 +36,10 @@ DEFAULT_SETTINGS = {
     'add_nofollow': False,
     # TODO 'autolink': ...
 }
+REPLACEMENTS = {
+    'b': 'strong',
+    'i': 'em',
+}
 
 
 class Sanitizer(object):
@@ -99,7 +103,11 @@ class Sanitizer(object):
             doc = html5parser.fromstring(html)
 
         cleaner = lxml.html.clean.Cleaner(
-            allow_tags=self.tags | {'anything', 'span'},
+            allow_tags=(
+                self.tags |
+                {'anything', 'span'} |
+                set(REPLACEMENTS.keys())
+            ),
             remove_unknown_tags=False,
             # Remove style *tags*
             style=True,
@@ -136,6 +144,9 @@ class Sanitizer(object):
                     # remove tag, but preserve children and text
                     element.drop_tag()
                     continue
+
+            if element.tag in REPLACEMENTS:
+                element.tag = REPLACEMENTS[element.tag]
 
             whitespace_re = re.compile(r'^(\&nbsp;|\&#160;|\s|\xa0)*$')
             if element.text or element.tail:

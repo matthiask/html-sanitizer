@@ -169,3 +169,11 @@ class SanitizerTestCase(TestCase):
         )
 
         self.run_tests(entries, sanitizer=sanitizer)
+
+    def test_12_replacements(self):
+        entries = (
+            ('<b>Bla</b>', '<strong>Bla</strong>'),
+            ('<i>Bla</i>', '<em>Bla</em>'),
+        )
+
+        self.run_tests(entries)
