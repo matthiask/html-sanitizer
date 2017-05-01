@@ -245,7 +245,7 @@ class Sanitizer(object):
             add_nofollow=self.add_nofollow,
         )(doc)
 
-        html = lxml.html.tostring(doc, method='html').decode('utf-8')
+        html = lxml.html.tostring(doc, encoding='unicode')
 
         # fix p-in-p tags
         p_in_p_start_re = re.compile(r'<p>(\&nbsp;|\&#160;|\s)*<p>')
