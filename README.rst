@@ -41,7 +41,7 @@ Usage
 Settings
 ========
 
-- ``span``s will always be removed from the tree, but only after
+- ``span`` elements will always be removed from the tree, but only after
   inspecting their style tags (bold spans are converted into ``strong``
   tags, italic spans into ``em`` tags)
 - ``b`` and ``i`` tags will always be converted into ``strong`` and
