@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from collections import deque
 import lxml.html
 import lxml.html.clean
 import re
@@ -112,7 +113,13 @@ class Sanitizer(object):
 
         # walk the tree recursively, because we want to be able to remove
         # previously emptied elements completely
-        for element in reversed(list(doc.iterdescendants())):
+        backlog = deque(doc.iterdescendants())
+        while True:
+            try:
+                element = backlog.pop()
+            except IndexError:
+                break
+
             # convert span elements into em/strong if a matching style rule
             # has been found. strong has precedence, strong & em at the same
             # time is not supported
@@ -182,6 +189,28 @@ class Sanitizer(object):
                 if first is not None and first.tag == 'br':
                     first.drop_tag()
 
+            if element.tag in (self.tags - self.separate):
+                nx = element.getnext()
+                if nx is not None and nx.tag == element.tag:
+                    if nx.text:
+                        if len(element):
+                            list(element)[-1].tail = '%s %s' % (
+                                list(element)[-1].tail or '',
+                                nx.text,
+                            )
+                        else:
+                            element.text = '%s %s' % (
+                                element.text or '',
+                                nx.text,
+                            )
+
+                    for child in nx:
+                        element.append(child)
+                    nx.drop_tree()
+
+                    # Process element again
+                    backlog.append(element)
+
             # Hook for custom filters:
             element = self.clean(element)
 
@@ -208,15 +237,6 @@ class Sanitizer(object):
         cleaner(doc)
 
         html = lxml.html.tostring(doc, method='html').decode('utf-8')
-
-        # merge tags
-        for tag in (self.tags - self.separate):
-            merge_str = '\s*</%s>\s*<%s>\s*' % (tag, tag)
-            while True:
-                new = re.sub(merge_str, ' ', html)
-                if new == html:
-                    break
-                html = new
 
         # fix p-in-p tags
         p_in_p_start_re = re.compile(r'<p>(\&nbsp;|\&#160;|\s)*<p>')
