@@ -102,7 +102,7 @@ class Sanitizer(object):
             from lxml.html import html5parser
             doc = html5parser.fromstring(html)
 
-        cleaner = lxml.html.clean.Cleaner(
+        lxml.html.clean.Cleaner(
             allow_tags=(
                 self.tags |
                 {'anything', 'span'} |
@@ -116,9 +116,7 @@ class Sanitizer(object):
             safe_attrs_only=False,
             inline_style=False,
             add_nofollow=self.add_nofollow,
-        )
-
-        cleaner(doc)
+        )(doc)
 
         # walk the tree recursively, because we want to be able to remove
         # previously emptied elements completely
@@ -241,14 +239,12 @@ class Sanitizer(object):
 
         # just to be sure, run cleaner again, but this time with even more
         # strict settings
-        cleaner = lxml.html.clean.Cleaner(
+        lxml.html.clean.Cleaner(
             allow_tags=self.tags | {'anything'},
             remove_unknown_tags=False,
             safe_attrs_only=True,
             add_nofollow=self.add_nofollow,
-        )
-
-        cleaner(doc)
+        )(doc)
 
         html = lxml.html.tostring(doc, method='html').decode('utf-8')
 
