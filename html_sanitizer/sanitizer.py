@@ -34,6 +34,7 @@ DEFAULT_SETTINGS = {
     'empty': {'hr', 'a', 'br'},
     'separate': {'a', 'p', 'li'},
     'add_nofollow': False,
+    # TODO 'autolink': ...
 }
 
 
@@ -206,6 +207,8 @@ class Sanitizer(object):
 
                     for child in nx:
                         element.append(child)
+
+                    # tail is merged with previous element.
                     nx.drop_tree()
 
                     # Process element again
