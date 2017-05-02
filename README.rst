@@ -18,6 +18,11 @@ no dependency on either Django_ or FeinCMS_.
 Goals
 =====
 
+HTML sanitizer goes further than e.g. bleach_ in that it not only
+ensures that content is safe and tags and attributes conform to a given
+whitelist, but also applies additional transforms to HTML fragments. A
+short list of goals follows:
+
 - Clean up HTML using a very restricted set of allowed tags and
   attributes.
 - Convert *some* tags (such as ``<span style="...">``, ``<b>`` and
@@ -81,6 +86,7 @@ The rationale for such a restricted set of allowed tags (e.g. no
 images) is documented in the `design decisions`_ section of
 django-content-editor_'s documentation.
 
+.. _bleach: https://bleach.readthedocs.io/
 .. _Django: https://www.djangoproject.com/
 .. _django-content-editor: http://django-content-editor.readthedocs.io/
 .. _FeinCMS: https://pypi.python.org/pypi/FeinCMS
