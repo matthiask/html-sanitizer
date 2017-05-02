@@ -10,6 +10,20 @@ import unicodedata
 __all__ = ('Sanitizer',)
 
 
+def sanitize_href(href):
+    """
+    Verify that a given href is benign and allowed.
+
+    This is a stupid check, which probably should be much more elaborate
+    to be safe.
+    """
+    if href.startswith(
+        ('/', 'mailto:', 'http:', 'https:', '#', 'tel:')
+    ):
+        return href
+    return '#'
+
+
 DEFAULT_SETTINGS = {
     'tags': {
         'a',
@@ -33,7 +47,9 @@ DEFAULT_SETTINGS = {
     'empty': {'hr', 'a', 'br'},
     'separate': {'a', 'p', 'li'},
     'add_nofollow': False,
-    # TODO 'autolink': ...
+    'autolink': False,
+    'element_filters': [],
+    'sanitize_href': sanitize_href,
 }
 REPLACEMENTS = {
     'b': 'strong',
@@ -61,23 +77,6 @@ class Sanitizer(object):
             ))
         if 'span' in self.tags:
             raise TypeError('"span" is not allowed in "tags"')
-
-    def sanitize_href(self, href):
-        """
-        Verify that a given href is benign and allowed.
-
-        This is a stupid check, which probably should be much more elaborate
-        to be safe.
-        """
-        if href.startswith(
-            ('/', 'mailto:', 'http:', 'https:', '#', 'tel:')
-        ):
-            return href
-        return '#'
-
-    def clean(self, element):
-        """ Hook for your own clean methods. """
-        return element
 
     def sanitize(self, html):
         """
@@ -227,8 +226,8 @@ class Sanitizer(object):
                     # Process element again
                     backlog.append(element)
 
-            # Hook for custom filters:
-            element = self.clean(element)
+            for filt in self.element_filters:
+                element = filt(element)
 
             # remove all attributes which are not explicitly allowed
             allowed = self.attributes.get(element.tag, [])
@@ -240,6 +239,11 @@ class Sanitizer(object):
             href = element.get('href')
             if href is not None:
                 element.set('href', self.sanitize_href(href))
+
+        if self.autolink:
+            lxml.html.clean.autolink(doc)
+        elif isinstance(self.autolink, dict):
+            lxml.html.clean.autolink(doc, **self.autolink)
 
         # just to be sure, run cleaner again, but this time with even more
         # strict settings

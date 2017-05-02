@@ -177,3 +177,29 @@ class SanitizerTestCase(TestCase):
         )
 
         self.run_tests(entries)
+
+    def test_13_autolink(self):
+        self.run_tests([(
+            '<p>https://github.com/</p>',
+            '<p>https://github.com/</p>',
+        )])
+
+        sanitizer = Sanitizer({
+            'autolink': True,
+        })
+
+        self.run_tests([(
+            '<p>https://github.com/</p>',
+            '<p><a href="https://github.com/">https://github.com/</a></p>',
+        )], sanitizer=sanitizer)
+
+        sanitizer = Sanitizer({
+            'autolink': True,
+            'add_nofollow': True,
+        })
+
+        self.run_tests([(
+            '<p>https://github.com/</p>',
+            '<p><a href="https://github.com/"'
+            ' rel="nofollow">https://github.com/</a></p>',
+        )], sanitizer=sanitizer)

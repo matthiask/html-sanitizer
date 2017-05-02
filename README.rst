@@ -65,8 +65,31 @@ The default settings are::
         'empty': {'hr', 'a', 'br'},
         'separate': {'a', 'p', 'li'},
         'add_nofollow': False,
-        # TODO 'autolink': ...
+        'autolink': False,
+        'element_filters': [],
+        'sanitize_href': html_sanitizer.sanitizer.sanitize_href,
     }
+
+The keys' meaning is as follows:
+
+- ``tags``: A ``set()`` of allowed tags.
+- ``attributes``: A ``dict()`` mapping tags to their allowed attributes.
+- ``empty``: Tags which are allowed to be empty. By default, empty tags
+  (containing no text or only whitespace) are dropped.
+- ``separate``: Tags which are not merged if they appear as siblings. By
+  default, tags of the same type are merged.
+- ``add_nofollow``: Whether to add ``rel="nofollow"`` to all links.
+- ``autolink``: Enable lxml_'s autolinker_. May be either a boolean or a
+  dictionary; a dictionary is passed as keyword arguments to
+  ``autolink``.
+- ``element_filters``: Additional filters that are called on all
+  elements in the tree. The tree is processed in reverse depth-first
+  order. Under certain circumstances elements are processed more than
+  once (search the code for ``backlog.append``)
+- ``sanitize_href``: A callable that gets anchor's ``href`` value and
+  returns a sanitized version. The default implementation checks whether
+  links start with a few allowed prefixes, and if not, returns a single
+  hash (``#``).
 
 Settings can be specified partially when initializing a sanitizer
 instance, but are still checked for consistency (e.g. it's not allowed
@@ -92,3 +115,5 @@ django-content-editor_'s documentation.
 .. _FeinCMS: https://pypi.python.org/pypi/FeinCMS
 .. _feincms-cleanse: https://pypi.python.org/pypi/feincms-cleanse
 .. _design decisions: http://django-content-editor.readthedocs.io/en/latest/#design-decisions
+.. _lxml: http://lxml.de/
+.. _autolinker: http://lxml.de/api/lxml.html.clean-module.html
