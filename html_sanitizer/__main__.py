@@ -5,7 +5,6 @@ import sys
 
 from .sanitizer import Sanitizer
 
-
 sanitizer = Sanitizer()
 
 if len(sys.argv) > 1:
