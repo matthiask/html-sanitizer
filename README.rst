@@ -109,6 +109,29 @@ The rationale for such a restricted set of allowed tags (e.g. no
 images) is documented in the `design decisions`_ section of
 django-content-editor_'s documentation.
 
+Django
+======
+
+HTML sanitizer does not depend on Django, but ships with a module which
+makes configuring sanitizers using Django settings easier. Usage is as
+follows::
+
+    >>> from html_sanitizer.django import get_sanitizer
+    >>> sanitizer = get_sanitizer([name=...])
+
+Different sanitizers can be configured. The default configuration is
+aptly named ``'default'``. Example settings follow::
+
+    HTML_SANITIZERS = {
+        'default': {
+        'tags': ...,
+        ...
+    }
+
+The ``'default'`` configuration is special: If it isn't explicitly
+defined, the default configuration above is used instead.
+
+
 .. _bleach: https://bleach.readthedocs.io/
 .. _Django: https://www.djangoproject.com/
 .. _django-content-editor: http://django-content-editor.readthedocs.io/
