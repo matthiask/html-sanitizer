@@ -252,28 +252,6 @@ class Sanitizer(object):
 
         html = lxml.html.tostring(doc, encoding='unicode')
 
-        # fix p-in-p tags
-        p_in_p_start_re = re.compile(r'<p>(\&nbsp;|\&#160;|\s)*<p>')
-        p_in_p_end_re = re.compile('</p>(\&nbsp;|\&#160;|\s)*</p>')
-
-        for tag in (self.tags - self.separate):
-            merge_start_re = re.compile(
-                '<p>(\\&nbsp;|\\&#160;|\\s)*<%s>(\\&nbsp;|\\&#160;|\\s)*<p>'
-                % tag)
-            merge_end_re = re.compile(
-                '</p>(\\&nbsp;|\\&#160;|\\s)*</%s>(\\&nbsp;|\\&#160;|\\s)*</p>'
-                % tag)
-
-            while True:
-                new = merge_start_re.sub('<p>', html)
-                new = merge_end_re.sub('</p>', new)
-                new = p_in_p_start_re.sub('<p>', new)
-                new = p_in_p_end_re.sub('</p>', new)
-
-                if new == html:
-                    break
-                html = new
-
         # add a space before the closing slash in empty tags
         html = re.sub(r'<([^/>]+)/>', r'<\1 />', html)
 
