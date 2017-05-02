@@ -88,10 +88,15 @@ class Sanitizer(object):
         Requires ``lxml`` and, for especially broken HTML, ``html5lib``.
         """
 
-        # remove all sorts of newline characters
-        html = html.replace('\n', ' ').replace('\r', ' ')
-        html = html.replace('&#10;', ' ').replace('&#13;', ' ')
-        html = html.replace('&#xa;', ' ').replace('&#xd;', ' ')
+        # remove all sorts of newline and nbsp characters
+        whitespace = [
+            '\n', '&#10;', '&#xa;',
+            '\r', '&#13;', '&#xd;',
+            '\xa0', '&nbsp;', '&#160;', '&#xa0',
+        ]
+        for ch in whitespace:
+            html = html.replace(ch, ' ')
+        html = re.sub(r'(?u)\s+', ' ', html)
 
         html = '<anything>%s</anything>' % html
         doc = lxml.html.fromstring(html)
@@ -145,7 +150,7 @@ class Sanitizer(object):
             if element.tag in REPLACEMENTS:
                 element.tag = REPLACEMENTS[element.tag]
 
-            whitespace_re = re.compile(r'^(\&nbsp;|\&#160;|\s|\xa0)*$')
+            whitespace_re = re.compile(r'^\s*$')
             if element.text or element.tail:
                 # remove elements containing only whitespace or linebreaks
                 while True:

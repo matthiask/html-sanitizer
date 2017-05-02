@@ -61,7 +61,7 @@ class SanitizerTestCase(TestCase):
     def test_03_merge(self):
         entries = (
             ('<h2>foo</h2><h2>bar</h2>', '<h2>foo bar</h2>'),
-            ('<h2>foo  </h2>   <h2>   bar</h2>', '<h2>foo      bar</h2>'),
+            ('<h2>foo  </h2>   <h2>   bar</h2>', '<h2>foo   bar</h2>'),
         )
 
         self.run_tests(entries)
