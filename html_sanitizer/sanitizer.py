@@ -152,17 +152,19 @@ class Sanitizer(object):
             whitespace_re = re.compile(r'^\s*$')
             if element.text or element.tail:
                 # remove elements containing only whitespace or linebreaks
-                while True:
-                    text = whitespace_re.sub('', element.text or '')
-                    if element.text == text:
-                        break
-                    element.text = text
+                if element.text:
+                    while True:
+                        text = whitespace_re.sub('', element.text)
+                        if element.text == text:
+                            break
+                        element.text = text
 
-                while True:
-                    text = whitespace_re.sub('', element.tail or '')
-                    if element.tail == text:
-                        break
-                    element.tail = text
+                if element.tail:
+                    while True:
+                        text = whitespace_re.sub(' ', element.tail)
+                        if element.tail == text:
+                            break
+                        element.tail = text
 
             # remove empty tags if they are not explicitly allowed
             if (not element.text and

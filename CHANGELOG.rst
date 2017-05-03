@@ -7,6 +7,8 @@ Change log
 
 - Added a the ``html_sanitizer.django.get_sanitizer`` to provide an
   official way of configuring HTML sanitizers using Django settings.
+- Fixed the erroneous removal of all whitespace between adjacent
+  elements.
 
 
 `1.0`_ (2017-05-02)
