@@ -40,6 +40,10 @@ class SanitizerTestCase(TestCase):
                 '<p><strong>just</strong> <em>testing</em></p>',
                 '<p><strong>just</strong> <em>testing</em></p>',
             ),
+            (
+                '<p>Hallo<br>Welt<br><br>Hallo<br>Welt</p>',
+                '<p>Hallo<br>Welt<br>Hallo<br>Welt</p>',
+            ),
         ]
 
         self.run_tests(entries)
