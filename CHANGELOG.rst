@@ -9,6 +9,8 @@ Change log
   official way of configuring HTML sanitizers using Django settings.
 - Fixed the erroneous removal of all whitespace between adjacent
   elements.
+- Fixed the erroneous removal of all but the first ``<br>`` inside a
+  paragraph.
 
 
 `1.0`_ (2017-05-02)

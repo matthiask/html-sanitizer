@@ -201,7 +201,7 @@ class Sanitizer(object):
 
                 # Drop <br/>'s at the beginning of parents.
                 parent = element.getparent()
-                if parent is not None and whitespace_re.match(parent.text or ''):
+                if parent is not None and whitespace_re.match(parent.text or ''):  # noqa
                     element.drop_tag()
 
             if not element.text:
