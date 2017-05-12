@@ -30,7 +30,7 @@ class SanitizerTestCase(TestCase):
             ('<p><br/><strong></strong>  <br/></p>', ''),
             (
                 '<p><br/><strong></strong>  <br/> abc</p>',
-                '<p>  abc</p>',
+                '<p> abc</p>',
             ),
             (
                 '<li><br>bla</li>',
@@ -43,6 +43,10 @@ class SanitizerTestCase(TestCase):
             (
                 '<p>Hallo<br>Welt<br><br>Hallo<br>Welt</p>',
                 '<p>Hallo<br>Welt<br>Hallo<br>Welt</p>',
+            ),
+            (
+                '<p><strong>Zeile 1</strong><br>Zeile 2<br>Zeile 3</p>',
+                '<p><strong>Zeile 1</strong><br>Zeile 2<br>Zeile 3</p>',
             ),
         ]
 
