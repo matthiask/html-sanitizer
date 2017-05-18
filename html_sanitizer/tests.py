@@ -215,3 +215,24 @@ class SanitizerTestCase(TestCase):
             '<p><a href="https://github.com/"'
             ' rel="nofollow">https://github.com/</a></p>',
         )], sanitizer=sanitizer)
+
+    def test_14_classes(self):
+        """Class attributes should not be treated specially"""
+        sanitizer = Sanitizer({
+            'attributes': {
+                'a': ('href', 'name', 'target', 'title', 'id'),
+                'h1': ('class',),
+                'p': ('class',),
+            },
+        })
+
+        self.run_tests([(
+            '<p class="centered">Test</p>',
+            '<p class="centered">Test</p>',
+        ), (
+            '<h1 class="centered">Test</h1>',
+            '<h1 class="centered">Test</h1>',
+        ), (
+            '<h2 class="centered">Test</h2>',
+            '<h2>Test</h2>',
+        )], sanitizer=sanitizer)
