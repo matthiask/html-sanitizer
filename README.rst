@@ -27,6 +27,7 @@ short list of goals follows:
   attributes.
 - Convert *some* tags (such as ``<span style="...">``, ``<b>`` and
   ``<i>``) into either ``<strong>`` or ``<em>`` (but never both).
+- Absolutely disallow all inline styles.
 - Normalize whitespace by removing repeated line breaks, empty
   paragraphs and other empty elements.
 - Merge adjacent tags of the same type (such as several ``<strong>`` or
@@ -34,6 +35,7 @@ short list of goals follows:
 - Automatically remove redundant list markers inside ``<li>`` tags.
 - Clean up some uglyness such as paragraphs inside paragraphs or list
   elements etc.
+- Normalize unicode.
 
 Usage
 =====
