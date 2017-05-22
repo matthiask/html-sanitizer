@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from __future__ import unicode_literals
 
 from unittest import TestCase
@@ -236,3 +238,9 @@ class SanitizerTestCase(TestCase):
             '<h2 class="centered">Test</h2>',
             '<h2>Test</h2>',
         )], sanitizer=sanitizer)
+
+    def test_15_emoji(self):
+        self.run_tests([(
+            '<p>😂</p>',
+            '<p>😂</p>',
+        )])
