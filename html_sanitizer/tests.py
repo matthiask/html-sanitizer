@@ -243,4 +243,7 @@ class SanitizerTestCase(TestCase):
         self.run_tests([(
             '<p>😂</p>',
             '<p>😂</p>',
+        ), (
+            '<p>💕</p>',
+            '<p>💕</p>',
         )])
