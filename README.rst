@@ -23,8 +23,8 @@ ensures that content is safe and tags and attributes conform to a given
 whitelist, but also applies additional transforms to HTML fragments. A
 short list of goals follows:
 
-- Clean up HTML using a very restricted set of allowed tags and
-  attributes.
+- Clean up HTML fragments using a very restricted set of allowed tags
+  and attributes.
 - Convert *some* tags (such as ``<span style="...">``, ``<b>`` and
   ``<i>``) into either ``<strong>`` or ``<em>`` (but never both).
 - Absolutely disallow all inline styles.
@@ -53,6 +53,9 @@ Settings
   tags, italic spans into ``em`` tags)
 - ``b`` and ``i`` tags will always be converted into ``strong`` and
   ``em`` (if ``strong`` and ``em`` are allowed at all)
+- Inline styles and scripts will always be dropped.
+- A ``div`` element is used to wrap the HTML fragment for the parser,
+  therefore ``div`` tags are not allowed.
 
 The default settings are::
 
