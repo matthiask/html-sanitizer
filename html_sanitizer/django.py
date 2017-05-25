@@ -7,9 +7,6 @@ from django.utils import lru_cache
 from .sanitizer import Sanitizer
 
 
-SETTINGS = None
-
-
 @lru_cache.lru_cache(maxsize=None)
 def get_sanitizer(name='default'):
     sanitizers = getattr(settings, 'HTML_SANITIZERS', {})
