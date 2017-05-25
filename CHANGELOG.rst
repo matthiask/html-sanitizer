@@ -10,6 +10,10 @@ Change log
 - Fixed the erroneous removal of all whitespace between adjacent
   elements.
 - Fixed a few occasions where ``<br>`` tags were erroneously removed.
+- Back to beautifulsoup4 for especially broken HTML respectively HTML
+  with Emojis on macOS.
+- Used a ``<div>`` instead of ``<anything>`` to wrap the document (since
+  beautifulsoup4 does not like custom tags too much)
 
 
 `1.0`_ (2017-05-02)

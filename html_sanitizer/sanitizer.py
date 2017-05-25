@@ -84,7 +84,7 @@ class Sanitizer(object):
 
         Removes everything not explicitly allowed in ``self.allowed_tags``.
 
-        Requires ``lxml`` and, for especially broken HTML, ``html5lib``.
+        Requires ``lxml`` and, for especially broken HTML, ``beautifulsoup4``.
         """
 
         # remove all sorts of newline and nbsp characters
@@ -97,18 +97,18 @@ class Sanitizer(object):
             html = html.replace(ch, ' ')
         html = re.sub(r'(?u)\s+', ' ', html)
 
-        html = '<anything>%s</anything>' % html
-        doc = lxml.html.fromstring(html)
+        html = '<div>%s</div>' % html
         try:
+            doc = lxml.html.fromstring(html)
             lxml.html.tostring(doc, encoding='utf-8')
-        except UnicodeDecodeError:
-            from lxml.html import html5parser
-            doc = html5parser.fromstring(html)
+        except:
+            from lxml.html import soupparser
+            doc = soupparser.fromstring(html)
 
         lxml.html.clean.Cleaner(
             allow_tags=(
                 self.tags |
-                {'anything', 'span'} |
+                {'div', 'span'} |
                 set(REPLACEMENTS.keys())
             ),
             remove_unknown_tags=False,
@@ -257,7 +257,7 @@ class Sanitizer(object):
         # just to be sure, run cleaner again, but this time with even more
         # strict settings
         lxml.html.clean.Cleaner(
-            allow_tags=self.tags | {'anything'},
+            allow_tags=self.tags,
             remove_unknown_tags=False,
             safe_attrs_only=True,
             add_nofollow=self.add_nofollow,
@@ -269,7 +269,7 @@ class Sanitizer(object):
         html = re.sub(r'<([^/>]+)/>', r'<\1 />', html)
 
         # remove wrapping tag needed by XML parser
-        html = re.sub(r'</?anything( /)?>', '', html)
+        html = re.sub(r'^<div>|</div>$', '', html)
 
         # normalize unicode
         html = unicodedata.normalize('NFKC', html)
