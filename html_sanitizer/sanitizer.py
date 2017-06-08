@@ -213,7 +213,8 @@ class Sanitizer(object):
 
             if element.tag in (self.tags - self.separate - self.empty):
                 nx = element.getnext()
-                if nx is not None and nx.tag == element.tag:
+                if (whitespace_re.match(element.tail or '') and
+                        nx is not None and nx.tag == element.tag):
                     if nx.text:
                         if len(element):
                             list(element)[-1].tail = '%s %s' % (

@@ -5,6 +5,8 @@ Change log
 `Next version`_
 ===============
 
+- Fixed a case where tags with content between them were erroneously merged.
+
 
 `1.2`_ (2017-05-25)
 ====================

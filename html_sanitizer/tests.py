@@ -50,6 +50,12 @@ class SanitizerTestCase(TestCase):
                 '<p><strong>Zeile 1</strong><br>Zeile 2<br>Zeile 3</p>',
                 '<p><strong>Zeile 1</strong><br>Zeile 2<br>Zeile 3</p>',
             ),
+            (
+                '<p><strong>A</strong>, <strong>B</strong>'
+                ' und <strong>C</strong></p>',
+                '<p><strong>A</strong>, <strong>B</strong>'
+                ' und <strong>C</strong></p>',
+            ),
         ]
 
         self.run_tests(entries)
