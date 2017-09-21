@@ -227,16 +227,23 @@ class SanitizerTestCase(TestCase):
     def test_14_classes(self):
         """Class attributes should not be treated specially"""
         sanitizer = Sanitizer({
+            'tags': {'h1', 'h2', 'p', 'a', 'span'},
             'attributes': {
                 'a': ('href', 'name', 'target', 'title', 'id'),
                 'h1': ('class',),
                 'p': ('class',),
+                'span': ('class',),
             },
+            'empty': set(),
+            'separate': {'a', 'p'},
         })
 
         self.run_tests([(
             '<p class="centered">Test</p>',
             '<p class="centered">Test</p>',
+        ), (
+            '<p class="centered">Test <span class="bla">span</span></p>',
+            '<p class="centered">Test <span class="bla">span</span></p>',
         ), (
             '<h1 class="centered">Test</h1>',
             '<h1 class="centered">Test</h1>',
