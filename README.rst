@@ -66,8 +66,15 @@ The default settings are::
         'separate': {'a', 'p', 'li'},
         'add_nofollow': False,
         'autolink': False,
-        'element_filters': [],
         'sanitize_href': html_sanitizer.sanitizer.sanitize_href,
+        'element_preprocessors': [
+            html_sanitizer.sanitizer.bold_to_strong,
+            html_sanitizer.sanitizer.italic_to_em,
+            html_sanitizer.sanitizer.tag_replacer('b', 'strong'),
+            html_sanitizer.sanitizer.tag_replacer('i', 'em'),
+        ],
+        'element_postprocessors': [
+        ],
     }
 
 The keys' meaning is as follows:
@@ -82,14 +89,16 @@ The keys' meaning is as follows:
 - ``autolink``: Enable lxml_'s autolinker_. May be either a boolean or a
   dictionary; a dictionary is passed as keyword arguments to
   ``autolink``.
-- ``element_filters``: Additional filters that are called on all
-  elements in the tree. The tree is processed in reverse depth-first
-  order. Under certain circumstances elements are processed more than
-  once (search the code for ``backlog.append``)
 - ``sanitize_href``: A callable that gets anchor's ``href`` value and
   returns a sanitized version. The default implementation checks whether
   links start with a few allowed prefixes, and if not, returns a single
   hash (``#``).
+- ``element_preprocessors`` and ``element_postprocessors``: Additional
+  filters that are called on all elements in the tree. The tree is
+  processed in reverse depth-first order. Under certain circumstances
+  elements are processed more than once (search the code for
+  ``backlog.append``). Preprocessors are run before whitespace
+  normalization, postprocessors afterwards.
 
 Settings can be specified partially when initializing a sanitizer
 instance, but are still checked for consistency. For example, it is not

@@ -7,6 +7,9 @@ Change log
 
 - Fixed a case where tags with content between them were erroneously merged.
 - Added a ``tox.ini`` file for running style checks and tests.
+- Replaced ``REPLACEMENTS`` and ``element_filters`` with the more
+  general ``element_preprocessors`` and ``element_postprocessors``
+  settings.
 
 
 `1.2`_ (2017-05-25)

@@ -25,6 +25,26 @@ def sanitize_href(href):
     return '#'
 
 
+def bold_to_strong(element):
+    if 'bold' in element.get('style', ''):
+        element.tag = 'strong'
+    return element
+
+
+def italic_to_em(element):
+    if 'italic' in element.get('style', ''):
+        element.tag = 'em'
+    return element
+
+
+def tag_replacer(from_, to_):
+    def replacer(element):
+        if element.tag == from_:
+            element.tag = to_
+        return element
+    return replacer
+
+
 DEFAULT_SETTINGS = {
     'tags': {
         'a',
@@ -49,12 +69,18 @@ DEFAULT_SETTINGS = {
     'separate': {'a', 'p', 'li'},
     'add_nofollow': False,
     'autolink': False,
-    'element_filters': [],
     'sanitize_href': sanitize_href,
-}
-REPLACEMENTS = {
-    'b': 'strong',
-    'i': 'em',
+    'element_preprocessors': [
+        # convert span elements into em/strong if a matching style rule
+        # has been found. strong has precedence, strong & em at the same
+        # time is not supported
+        bold_to_strong,
+        italic_to_em,
+        tag_replacer('b', 'strong'),
+        tag_replacer('i', 'em'),
+    ],
+    'element_postprocessors': [
+    ],
 }
 
 
@@ -107,11 +133,6 @@ class Sanitizer(object):
             doc = soupparser.fromstring(html)
 
         lxml.html.clean.Cleaner(
-            allow_tags=(
-                self.tags |
-                {'div', 'span'} |
-                set(REPLACEMENTS.keys())
-            ),
             remove_unknown_tags=False,
             # Remove style *tags*
             style=True,
@@ -131,24 +152,8 @@ class Sanitizer(object):
             except IndexError:
                 break
 
-            # convert span elements into em/strong if a matching style rule
-            # has been found. strong has precedence, strong & em at the same
-            # time is not supported
-            if element.tag == 'span':
-                style = element.get('style')
-                if style:
-                    if 'bold' in style:
-                        element.tag = 'strong'
-                    elif 'italic' in style:
-                        element.tag = 'em'
-
-                if element.tag == 'span':  # still span
-                    # remove tag, but preserve children and text
-                    element.drop_tag()
-                    continue
-
-            if element.tag in REPLACEMENTS:
-                element.tag = REPLACEMENTS[element.tag]
+            for processor in self.element_preprocessors:
+                element = processor(element)
 
             whitespace_re = re.compile(r'^\s*$')
             if element.text or element.tail:
@@ -237,8 +242,8 @@ class Sanitizer(object):
                     # Process element again
                     backlog.append(element)
 
-            for filt in self.element_filters:
-                element = filt(element)
+            for processor in self.element_postprocessors:
+                element = processor(element)
 
             # remove all attributes which are not explicitly allowed
             allowed = self.attributes.get(element.tag, [])
