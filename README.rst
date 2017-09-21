@@ -8,20 +8,15 @@ HTML sanitizer
 This is a whitelist-based and very opinionated HTML sanitizer that
 can be used both for untrusted and trusted sources. It attempts to clean
 up the mess made by various rich text editors and or copy-pasting to
-make styling of webpages simpler and more consistent.
-
-It had its humble beginnings as ``feincms.utils.html.cleanse.cleanse_html``
-and feincms-cleanse_, and while it's still humble its name has been
-changed to HTML sanitizer to underline the fact that it has absolutely
-no dependency on either Django_ or FeinCMS_.
-
-Goals
-=====
+make styling of webpages simpler and more consistent. It builds on the
+excellent HTML cleaner in lxml_ to make the result both valid and safe.
 
 HTML sanitizer goes further than e.g. bleach_ in that it not only
 ensures that content is safe and tags and attributes conform to a given
-whitelist, but also applies additional transforms to HTML fragments. A
-short list of goals follows:
+whitelist, but also applies additional transforms to HTML fragments.
+
+Goals
+=====
 
 - Clean up HTML fragments using a very restricted set of allowed tags
   and attributes.
@@ -97,10 +92,13 @@ The keys' meaning is as follows:
   hash (``#``).
 
 Settings can be specified partially when initializing a sanitizer
-instance, but are still checked for consistency (e.g. it's not allowed
-to have tags in ``empty`` that are not in ``tags``, that is, tags that
-are allowed to be empty but at the same time not allowed at all). An
-example for an even more restricted configuration might be::
+instance, but are still checked for consistency. For example, it is not
+allowed to have tags in ``empty`` that are not in ``tags``, that is,
+tags that are allowed to be empty but at the same time not allowed at
+all. The ``Sanitizer`` constructor raises ``TypeError`` exceptions when
+it detects inconsistencies.
+
+An example for an even more restricted configuration might be::
 
     >>> from html_sanitizer import Sanitizer
     >>> sanitizer = Sanitizer({
@@ -129,12 +127,17 @@ aptly named ``'default'``. Example settings follow::
 
     HTML_SANITIZERS = {
         'default': {
-        'tags': ...,
+          'tags': ...,
+        },
         ...
     }
 
 The ``'default'`` configuration is special: If it isn't explicitly
-defined, the default configuration above is used instead.
+defined, the default configuration above is used instead. Non-existing
+configurations will lead to ``ImproperlyConfigured`` exceptions.
+
+The ``get_sanitizer`` function caches sanitizer instances, so feel free
+to call it as often as you want to.
 
 
 .. _bleach: https://bleach.readthedocs.io/
