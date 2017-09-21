@@ -6,6 +6,7 @@ Change log
 ===============
 
 - Fixed a case where tags with content between them were erroneously merged.
+- Added a ``tox.ini`` file for running style checks and tests.
 
 
 `1.2`_ (2017-05-25)

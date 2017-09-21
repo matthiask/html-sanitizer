@@ -1,10 +1,11 @@
 from __future__ import unicode_literals
 
-from collections import deque
-import lxml.html
-import lxml.html.clean
 import re
 import unicodedata
+from collections import deque
+
+import lxml.html
+import lxml.html.clean
 
 
 __all__ = ('Sanitizer',)
