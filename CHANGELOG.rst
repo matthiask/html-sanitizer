@@ -10,6 +10,7 @@ Change log
 - Replaced ``REPLACEMENTS`` and ``element_filters`` with the more
   general ``element_preprocessors`` and ``element_postprocessors``
   settings.
+- Removed the restriction that ``<span>`` tags are never allowed.
 
 
 `1.2`_ (2017-05-25)
