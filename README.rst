@@ -43,11 +43,9 @@ Usage
 Settings
 ========
 
-- ``span`` elements will always be removed from the tree, but only after
-  inspecting their style tags (bold spans are converted into ``strong``
-  tags, italic spans into ``em`` tags)
-- ``b`` and ``i`` tags will always be converted into ``strong`` and
-  ``em`` (if ``strong`` and ``em`` are allowed at all)
+- Bold spans and ``b`` tags are converted into ``strong`` tags, italic
+  spans and ``i`` tags into ``em`` tags (if ``strong`` and ``em`` are
+  allowed at all)
 - Inline styles and scripts will always be dropped.
 - A ``div`` element is used to wrap the HTML fragment for the parser,
   therefore ``div`` tags are not allowed.
@@ -68,8 +66,8 @@ The default settings are::
         'autolink': False,
         'sanitize_href': html_sanitizer.sanitizer.sanitize_href,
         'element_preprocessors': [
-            html_sanitizer.sanitizer.bold_to_strong,
-            html_sanitizer.sanitizer.italic_to_em,
+            html_sanitizer.sanitizer.bold_span_to_strong,
+            html_sanitizer.sanitizer.italic_span_to_em,
             html_sanitizer.sanitizer.tag_replacer('b', 'strong'),
             html_sanitizer.sanitizer.tag_replacer('i', 'em'),
         ],

@@ -25,14 +25,14 @@ def sanitize_href(href):
     return '#'
 
 
-def bold_to_strong(element):
-    if 'bold' in element.get('style', ''):
+def bold_span_to_strong(element):
+    if element.tag == 'span' and 'bold' in element.get('style', ''):
         element.tag = 'strong'
     return element
 
 
-def italic_to_em(element):
-    if 'italic' in element.get('style', ''):
+def italic_span_to_em(element):
+    if element.tag == 'span' and 'italic' in element.get('style', ''):
         element.tag = 'em'
     return element
 
@@ -74,8 +74,8 @@ DEFAULT_SETTINGS = {
         # convert span elements into em/strong if a matching style rule
         # has been found. strong has precedence, strong & em at the same
         # time is not supported
-        bold_to_strong,
-        italic_to_em,
+        bold_span_to_strong,
+        italic_span_to_em,
         tag_replacer('b', 'strong'),
         tag_replacer('i', 'em'),
     ],
@@ -102,8 +102,6 @@ class Sanitizer(object):
             raise TypeError('Tags in "attributes", but not allowed: %r' % (
                 set(self.attributes.keys()) - self.tags,
             ))
-        if 'span' in self.tags:
-            raise TypeError('"span" is not allowed in "tags"')
 
     def sanitize(self, html):
         """
