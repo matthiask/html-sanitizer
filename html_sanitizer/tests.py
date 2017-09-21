@@ -28,6 +28,8 @@ class SanitizerTestCase(TestCase):
                 '<p>abc def <em>ghi</em> jkl mno</p>'),
             ('<span style="font-style: italic;">Something</span><p></p>',
                 '<em>Something</em>'),
+            ('<h2 style="font-weight:bold">bla</h2>', '<h2>bla</h2>'),
+            ('<h2 style="font-style:italic">bla</h2>', '<h2>bla</h2>'),
             ('<p>abc<br />def</p>', '<p>abc<br>def</p>'),
             ('<p><br/><strong></strong>  <br/></p>', ''),
             (
