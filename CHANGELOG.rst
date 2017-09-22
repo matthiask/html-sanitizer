@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ===============
 
+`1.3`_ (2017-09-22)
+====================
+
 - Fixed a case where tags with content between them were erroneously merged.
 - Added a ``tox.ini`` file for running style checks and tests.
 - Replaced ``REPLACEMENTS`` and ``element_filters`` with the more
@@ -44,4 +47,5 @@ Change log
 .. _1.0: https://github.com/matthiask/html-sanitizer/commit/4a995538f
 .. _1.1: https://github.com/matthiask/html-sanitizer/compare/1.0...1.1
 .. _1.2: https://github.com/matthiask/html-sanitizer/compare/1.1...1.2
-.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.2...master
+.. _1.3: https://github.com/matthiask/html-sanitizer/compare/1.2...1.3
+.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.3...master
