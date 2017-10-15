@@ -138,7 +138,6 @@ class Sanitizer(object):
             # information to convert spans into em/strong tags
             safe_attrs_only=False,
             inline_style=False,
-            add_nofollow=self.add_nofollow,
         )(doc)
 
         # walk the tree recursively, because we want to be able to remove
