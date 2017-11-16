@@ -9,6 +9,7 @@ import lxml.html.clean
 
 
 __all__ = ('Sanitizer',)
+whitespace_re = re.compile(r'^\s*$')
 
 
 def sanitize_href(href):
@@ -23,6 +24,19 @@ def sanitize_href(href):
     ):
         return href
     return '#'
+
+
+def normalize_overall_whitespace(html):
+    # remove all sorts of newline and nbsp characters
+    whitespace = [
+        '\n', '&#10;', '&#xa;',
+        '\r', '&#13;', '&#xd;',
+        '\xa0', '&nbsp;', '&#160;', '&#xa0',
+    ]
+    for ch in whitespace:
+        html = html.replace(ch, ' ')
+    html = re.sub(r'(?u)\s+', ' ', html)
+    return html
 
 
 def bold_span_to_strong(element):
@@ -43,6 +57,26 @@ def tag_replacer(from_, to_):
             element.tag = to_
         return element
     return replacer
+
+
+def normalize_whitespace_in_text_or_tail(element):
+    if element.text or element.tail:
+        # remove elements containing only whitespace or linebreaks
+        if element.text:
+            while True:
+                text = whitespace_re.sub('', element.text)
+                if element.text == text:
+                    break
+                element.text = text
+
+        if element.tail:
+            while True:
+                text = whitespace_re.sub(' ', element.tail)
+                if element.tail == text:
+                    break
+                element.tail = text
+
+    return element
 
 
 DEFAULT_SETTINGS = {
@@ -112,16 +146,7 @@ class Sanitizer(object):
         Requires ``lxml`` and, for especially broken HTML, ``beautifulsoup4``.
         """
 
-        # remove all sorts of newline and nbsp characters
-        whitespace = [
-            '\n', '&#10;', '&#xa;',
-            '\r', '&#13;', '&#xd;',
-            '\xa0', '&nbsp;', '&#160;', '&#xa0',
-        ]
-        for ch in whitespace:
-            html = html.replace(ch, ' ')
-        html = re.sub(r'(?u)\s+', ' ', html)
-
+        html = normalize_overall_whitespace(html)
         html = '<div>%s</div>' % html
         try:
             doc = lxml.html.fromstring(html)
@@ -152,22 +177,7 @@ class Sanitizer(object):
             for processor in self.element_preprocessors:
                 element = processor(element)
 
-            whitespace_re = re.compile(r'^\s*$')
-            if element.text or element.tail:
-                # remove elements containing only whitespace or linebreaks
-                if element.text:
-                    while True:
-                        text = whitespace_re.sub('', element.text)
-                        if element.text == text:
-                            break
-                        element.text = text
-
-                if element.tail:
-                    while True:
-                        text = whitespace_re.sub(' ', element.tail)
-                        if element.tail == text:
-                            break
-                        element.tail = text
+            element = normalize_whitespace_in_text_or_tail(element)
 
             # remove empty tags if they are not explicitly allowed
             if (not element.text and
@@ -176,20 +186,21 @@ class Sanitizer(object):
                 element.drop_tag()
                 continue
 
+            # remove tags which only contain whitespace and/or <br>s
             if (whitespace_re.match(element.text or '') and
                     {e.tag for e in element} == {'br'} and
                     all(whitespace_re.match(e.tail or '') for e in element)):
                 element.drop_tree()
                 continue
 
-            elif element.tag == 'li':
+            if element.tag == 'li':
                 # remove p-in-li tags
                 for p in element.findall('p'):
                     if getattr(p, 'text', None):
                         p.text = ' ' + p.text + ' '
                     p.drop_tag()
 
-                # remove list markers
+                # remove list markers, maybe copy-pasted from word or whatever
                 if element.text:
                     element.text = re.sub(
                         r'^(\&nbsp;|\&#160;|\s)*(-|\*|&#183;)(\&nbsp;|\&#160;|\s)+',  # noqa
@@ -197,27 +208,30 @@ class Sanitizer(object):
                         element.text)
 
             elif element.tag == 'br':
+                # Drop the next element if
+                # 1. it is a <br> too and 2. there is no content in-between
                 nx = element.getnext()
                 if nx is not None and nx.tag == 'br' and not element.tail:
                     nx.drop_tag()
                     continue
 
-                # Drop <br/>'s at the beginning of parents.
-                parent = element.getparent()
-                if (parent is not None and
-                        element.getprevious() is None and
-                        whitespace_re.match(parent.text or '')):  # noqa
-                    element.drop_tag()
-
             if not element.text:
+                # No text before first child and first child is a <br>: Drop it
                 first = list(element)[0] if list(element) else None
                 if first is not None and first.tag == 'br':
                     first.drop_tag()
+                    # Maybe we have more than one <br>
+                    backlog.append(element)
+                    continue
 
             if element.tag in (self.tags - self.separate - self.empty):
+                # Check whether we should merge adjacent elements of the same
+                # tag type
                 nx = element.getnext()
                 if (whitespace_re.match(element.tail or '') and
                         nx is not None and nx.tag == element.tag):
+                    # Yes, we should. Tail is empty, that is, no text between
+                    # tags of a mergeable type.
                     if nx.text:
                         if len(element):
                             list(element)[-1].tail = '%s %s' % (
@@ -238,6 +252,7 @@ class Sanitizer(object):
 
                     # Process element again
                     backlog.append(element)
+                    continue
 
             for processor in self.element_postprocessors:
                 element = processor(element)
@@ -258,8 +273,7 @@ class Sanitizer(object):
         elif isinstance(self.autolink, dict):
             lxml.html.clean.autolink(doc, **self.autolink)
 
-        # just to be sure, run cleaner again, but this time with even more
-        # strict settings
+        # Run cleaner again, but this time with even more strict settings
         lxml.html.clean.Cleaner(
             allow_tags=self.tags,
             remove_unknown_tags=False,

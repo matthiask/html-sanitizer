@@ -31,7 +31,7 @@ class SanitizerTestCase(TestCase):
             ('<h2 style="font-weight:bold">bla</h2>', '<h2>bla</h2>'),
             ('<h2 style="font-style:italic">bla</h2>', '<h2>bla</h2>'),
             ('<p>abc<br />def</p>', '<p>abc<br>def</p>'),
-            ('<p><br/><strong></strong>  <br/></p>', ''),
+            ('<p><br/><br/><strong></strong>  <br/></p>', ''),
             (
                 '<p><br/><strong></strong>  <br/> abc</p>',
                 '<p> abc</p>',
