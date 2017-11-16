@@ -28,6 +28,6 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development',
     ],
-    install_requires=('lxml>=3', 'beautifulsoup4'),
+    install_requires=('lxml>=3.6.1', 'beautifulsoup4'),
     test_suite='html_sanitizer.tests',
 )
