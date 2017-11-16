@@ -151,7 +151,7 @@ class Sanitizer(object):
         try:
             doc = lxml.html.fromstring(html)
             lxml.html.tostring(doc, encoding='utf-8')
-        except:
+        except Exception:  # We could and maybe should be more specific...
             from lxml.html import soupparser
             doc = soupparser.fromstring(html)
 
