@@ -59,6 +59,19 @@ def tag_replacer(from_, to_):
     return replacer
 
 
+def target_blank_noopener(element):
+    if (
+            element.tag == 'a' and
+            element.attrib.get('target') == '_blank' and
+            'noopener' not in element.attrib.get('rel', '')
+    ):
+        element.attrib['rel'] = ' '.join(part for part in (
+            element.attrib.get('rel', ''),
+            'noopener',
+        ) if part)
+    return element
+
+
 def normalize_whitespace_in_text_or_tail(element):
     if element.text or element.tail:
         # remove elements containing only whitespace or linebreaks
@@ -97,7 +110,7 @@ DEFAULT_SETTINGS = {
         'hr',
     },
     'attributes': {
-        'a': ('href', 'name', 'target', 'title', 'id'),
+        'a': ('href', 'name', 'target', 'title', 'id', 'rel'),
     },
     'empty': {'hr', 'a', 'br'},
     'separate': {'a', 'p', 'li'},
@@ -112,6 +125,7 @@ DEFAULT_SETTINGS = {
         italic_span_to_em,
         tag_replacer('b', 'strong'),
         tag_replacer('i', 'em'),
+        target_blank_noopener,
     ],
     'element_postprocessors': [
     ],
@@ -136,6 +150,13 @@ class Sanitizer(object):
             raise TypeError('Tags in "attributes", but not allowed: %r' % (
                 set(self.attributes.keys()) - self.tags,
             ))
+
+        anchor_attributes = self.attributes.get('a', ())
+        if 'target' in anchor_attributes and 'rel' not in anchor_attributes:
+            raise TypeError(
+                'Always allow "rel" when allowing "target" as anchor'
+                ' attribute'
+            )
 
     def sanitize(self, html):
         """
