@@ -138,6 +138,14 @@ class Sanitizer(object):
                 set(self.attributes.keys()) - self.tags,
             ))
 
+    @staticmethod
+    def is_mergeable(e1, e2):
+        """
+        Decide if the adjacent elements of the same type e1 and e2 can be
+        merged. This can be overriden to honouring distinct classes etc.
+        """
+        return True
+
     def sanitize(self, html):
         """
         Clean HTML code from ugly copy-pasted CSS and empty elements
@@ -232,7 +240,8 @@ class Sanitizer(object):
                 # tag type
                 nx = element.getnext()
                 if (whitespace_re.match(element.tail or '') and
-                        nx is not None and nx.tag == element.tag):
+                        nx is not None and nx.tag == element.tag and
+                        self.is_mergeable(element, nx)):
                     # Yes, we should. Tail is empty, that is, no text between
                     # tags of a mergeable type.
                     if nx.text:

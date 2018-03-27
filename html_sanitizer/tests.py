@@ -256,6 +256,9 @@ class SanitizerTestCase(TestCase):
             '<p class="centered">Test <span class="bla">span</span></p>',
             '<p class="centered">Test <span class="bla">span</span></p>',
         ), (
+            '<p class="centered">Test <span class="bla">span</span><span class="blub">span</span></p>',
+            '<p class="centered">Test <span class="bla">span span</span></p>',
+        ), (
             '<h1 class="centered">Test</h1>',
             '<h1 class="centered">Test</h1>',
         ), (
@@ -263,7 +266,30 @@ class SanitizerTestCase(TestCase):
             '<h2>Test</h2>',
         )], sanitizer=sanitizer)
 
-    def test_15_emoji(self):
+    def test_15_classes(self):
+        """Class attributes may disable merging"""
+        sanitizer = Sanitizer({
+            'tags': {'h1', 'h2', 'p', 'a', 'span'},
+            'attributes': {
+                'a': ('href', 'name', 'target', 'title', 'id'),
+                'h1': ('class',),
+                'p': ('class',),
+                'span': ('class',),
+            },
+            'empty': set(),
+            'separate': {'a', 'p'},
+            'is_mergeable': lambda e1, e2: e1.get('class') == e2.get('class'),
+        })
+
+        self.run_tests([(
+            '<p class="centered">Test <span class="bla">span</span><span class="blub">span</span></p>',
+            '<p class="centered">Test <span class="bla">span</span><span class="blub">span</span></p>',
+        ), (
+            '<p class="centered">Test <span class="bla">span</span><span class="bla">span</span></p>',
+            '<p class="centered">Test <span class="bla">span span</span></p>',
+        )], sanitizer=sanitizer)
+
+    def test_16_emoji(self):
         self.run_tests([(
             '<p>😂</p>',
             '<p>😂</p>',
