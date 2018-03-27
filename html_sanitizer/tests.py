@@ -256,7 +256,8 @@ class SanitizerTestCase(TestCase):
             '<p class="centered">Test <span class="bla">span</span></p>',
             '<p class="centered">Test <span class="bla">span</span></p>',
         ), (
-            '<p class="centered">Test <span class="bla">span</span><span class="blub">span</span></p>',
+            '<p class="centered">Test <span class="bla">span</span>'
+            '<span class="blub">span</span></p>',
             '<p class="centered">Test <span class="bla">span span</span></p>',
         ), (
             '<h1 class="centered">Test</h1>',
@@ -282,10 +283,13 @@ class SanitizerTestCase(TestCase):
         })
 
         self.run_tests([(
-            '<p class="centered">Test <span class="bla">span</span><span class="blub">span</span></p>',
-            '<p class="centered">Test <span class="bla">span</span><span class="blub">span</span></p>',
+            '<p class="centered">Test <span class="bla">span</span>'
+            '<span class="blub">span</span></p>',
+            '<p class="centered">Test <span class="bla">span</span>'
+            '<span class="blub">span</span></p>',
         ), (
-            '<p class="centered">Test <span class="bla">span</span><span class="bla">span</span></p>',
+            '<p class="centered">Test <span class="bla">span</span>'
+            '<span class="bla">span</span></p>',
             '<p class="centered">Test <span class="bla">span span</span></p>',
         )], sanitizer=sanitizer)
 
