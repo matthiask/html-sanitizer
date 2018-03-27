@@ -58,6 +58,15 @@ class SanitizerTestCase(TestCase):
                 '<p><strong>A</strong>, <strong>B</strong>'
                 ' und <strong>C</strong></p>',
             ),
+            (
+                '<p><form>Zeile 1</form></p>',
+                '<p>Zeile 1</p>',
+            ),
+            # Suboptimal, should be cleaned further
+            (
+                '<form><p>Zeile 2</p></form>',
+                '<p><p>Zeile 2</p></p>',
+            ),
         ]
 
         self.run_tests(entries)

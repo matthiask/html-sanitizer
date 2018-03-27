@@ -112,6 +112,7 @@ DEFAULT_SETTINGS = {
         italic_span_to_em,
         tag_replacer('b', 'strong'),
         tag_replacer('i', 'em'),
+        tag_replacer('form', 'p'),
     ],
     'element_postprocessors': [
     ],
@@ -163,6 +164,8 @@ class Sanitizer(object):
             # information to convert spans into em/strong tags
             safe_attrs_only=False,
             inline_style=False,
+            # Do not strip all form tags; we will filter them below
+            forms=False
         )(doc)
 
         # walk the tree recursively, because we want to be able to remove
@@ -279,6 +282,7 @@ class Sanitizer(object):
             remove_unknown_tags=False,
             safe_attrs_only=True,
             add_nofollow=self.add_nofollow,
+            forms=False
         )(doc)
 
         html = lxml.html.tostring(doc, encoding='unicode')
