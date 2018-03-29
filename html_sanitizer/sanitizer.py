@@ -204,8 +204,8 @@ class Sanitizer(object):
                 element.drop_tree()
                 continue
 
-            if element.tag == 'li':
-                # remove p-in-li tags
+            if element.tag in {'li', 'p'}:
+                # remove p-in-li and p-in-p tags
                 for p in element.findall('p'):
                     if getattr(p, 'text', None):
                         p.text = ' ' + p.text + ' '

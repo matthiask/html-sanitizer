@@ -65,7 +65,7 @@ class SanitizerTestCase(TestCase):
             # Suboptimal, should be cleaned further
             (
                 '<form><p>Zeile 2</p></form>',
-                '<p><p>Zeile 2</p></p>',
+                '<p> Zeile 2 </p>',
             ),
         ]
 
@@ -119,6 +119,14 @@ class SanitizerTestCase(TestCase):
             # closes the first paragraph, and the trailing </p> is
             # deleted because it has no matching opening <p>
             ('<p>foo<p>bar</p>baz</p>', '<p>foo</p><p>bar</p>baz'),
+            (
+                '<p>bla <p>blub</p> blaaa</p>',
+                '<p>bla </p><p>blub</p> blaaa',
+            ),
+            (
+                '<p>text1 <p>text2</p> tail2 <p>text3</p> tail3 </p>tail1',
+                '<p>text1 </p><p>text2</p> tail2 <p>text3</p> tail3 tail1',
+            ),
         )
 
         self.run_tests(entries)
