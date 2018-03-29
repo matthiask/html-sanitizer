@@ -5,6 +5,20 @@ Change log
 `Next version`_
 ===============
 
+
+`1.4`_ (2018-03-29)
+====================
+
+- Corrected the required lxml version in ``install_requires``.
+- Added comments and testing for more edge cases.
+- Changed the cleaner to not drop form elements; instead, ``<form>`` is
+  converted to ``<p>``, and form elements are preserved.
+- Added an ``is_mergeable`` hook for conditionally preventing the
+  merging of adjacent elements.
+- Fixed a case where paragraphs were allowed inside paragraphs (which
+  was never the idea).
+
+
 `1.3`_ (2017-09-22)
 ====================
 
@@ -48,4 +62,5 @@ Change log
 .. _1.1: https://github.com/matthiask/html-sanitizer/compare/1.0...1.1
 .. _1.2: https://github.com/matthiask/html-sanitizer/compare/1.1...1.2
 .. _1.3: https://github.com/matthiask/html-sanitizer/compare/1.2...1.3
-.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.3...master
+.. _1.4: https://github.com/matthiask/html-sanitizer/compare/1.3...1.4
+.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.4...master

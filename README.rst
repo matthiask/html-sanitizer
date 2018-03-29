@@ -73,6 +73,7 @@ The default settings are::
         ],
         'element_postprocessors': [
         ],
+        'is_mergeable': lambda e1, e2: True,
     }
 
 The keys' meaning is as follows:
@@ -97,6 +98,10 @@ The keys' meaning is as follows:
   elements are processed more than once (search the code for
   ``backlog.append``). Preprocessors are run before whitespace
   normalization, postprocessors afterwards.
+- ``is_mergeable``: Adjacent elements which aren't kept ``separate`` are
+  merged by default. This callable can be used to prevent merging of
+  adjacent elements e.g. when their classes do not match
+  (``lambda e1, e2: e1.get('class') == e2.get('class')``)
 
 Settings can be specified partially when initializing a sanitizer
 instance, but are still checked for consistency. For example, it is not
