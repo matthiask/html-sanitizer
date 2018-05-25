@@ -2,26 +2,33 @@
 
 from __future__ import unicode_literals
 
+from contextlib import contextmanager
 from unittest import TestCase
 
 from .sanitizer import Sanitizer
 
 
 class SanitizerTestCase(TestCase):
+    if not TestCase.subTest:
+        @contextmanager
+        def subTest(self, *args, **kwargs):
+            yield
+
     def run_tests(self, entries, sanitizer=Sanitizer()):
         for before, after in entries:
-            after = before if after is None else after
-            result = sanitizer.sanitize(before)
-            self.assertEqual(
-                result,
-                after,
-                "Cleaning '%s', expected '%s' but got '%s'" % (
-                    before, after, result))
+            with self.subTest(before=before, after=after):
+                after = before if after is None else after
+                result = sanitizer.sanitize(before)
+                self.assertEqual(
+                    result,
+                    after,
+                    "Cleaning '%s', expected '%s' but got '%s'" % (
+                        before, after, result))
 
     def test_01_sanitize(self):
         entries = [
-            ('<p>&nbsp;</p>', ''),
-            ('<p>           </p>', ''),
+            ('<p>&nbsp;</p>', ' '),
+            ('<p>           </p>', ' '),
             ('<span style="font-weight: bold;">Something</span><p></p>',
                 '<strong>Something</strong>'),
             ('<p>abc <span>def <em>ghi</em> jkl</span> mno</p>',
@@ -34,7 +41,7 @@ class SanitizerTestCase(TestCase):
             ('<p><br/><br/><strong></strong>  <br/></p>', ''),
             (
                 '<p><br/><strong></strong>  <br/> abc</p>',
-                '<p> abc</p>',
+                '<p>  abc</p>',
             ),
             (
                 '<li><br>bla</li>',
@@ -66,6 +73,10 @@ class SanitizerTestCase(TestCase):
             (
                 '<form><p>Zeile 2</p></form>',
                 '<p> Zeile 2 </p>',
+            ),
+            (
+                '1<p> </p>2',
+                '1 2',
             ),
         ]
 
@@ -100,7 +111,7 @@ class SanitizerTestCase(TestCase):
     def test_04_p_in_li(self):
         entries = (
             ('<li><p>foo</p></li>', '<li> foo </li>'),
-            ('<li>&nbsp;<p>foo</p> &#160; </li>', '<li> foo  </li>'),
+            ('<li>&nbsp;<p>foo</p> &#160; </li>', '<li>  foo  </li>'),
             (
                 '<li>foo<p>bar<strong>xx</strong>rab</p><strong>baz</strong>'
                 'a<p>b</p>c</li>',

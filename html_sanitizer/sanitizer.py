@@ -64,7 +64,7 @@ def normalize_whitespace_in_text_or_tail(element):
         # remove elements containing only whitespace or linebreaks
         if element.text:
             while True:
-                text = whitespace_re.sub('', element.text)
+                text = whitespace_re.sub(' ', element.text)
                 if element.text == text:
                     break
                 element.text = text
@@ -191,7 +191,7 @@ class Sanitizer(object):
             element = normalize_whitespace_in_text_or_tail(element)
 
             # remove empty tags if they are not explicitly allowed
-            if (not element.text and
+            if ((not element.text or whitespace_re.match(element.text)) and
                     element.tag not in self.empty and
                     not len(element)):
                 element.drop_tag()
@@ -222,7 +222,11 @@ class Sanitizer(object):
                 # Drop the next element if
                 # 1. it is a <br> too and 2. there is no content in-between
                 nx = element.getnext()
-                if nx is not None and nx.tag == 'br' and not element.tail:
+                if (
+                    nx is not None and
+                    nx.tag == 'br' and
+                    (not element.tail or whitespace_re.match(element.tail))
+                ):
                     nx.drop_tag()
                     continue
 
