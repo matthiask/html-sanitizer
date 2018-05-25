@@ -9,7 +9,7 @@ from .sanitizer import Sanitizer
 
 
 class SanitizerTestCase(TestCase):
-    if not TestCase.subTest:
+    if not hasattr(TestCase, "subTest"):
         @contextmanager
         def subTest(self, *args, **kwargs):
             yield
