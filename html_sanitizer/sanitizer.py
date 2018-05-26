@@ -9,7 +9,8 @@ import lxml.html.clean
 
 
 __all__ = ('Sanitizer',)
-whitespace_re = re.compile(r'^\s*$')
+only_whitespace_re = re.compile(r'^\s*$')
+whitespace_re = re.compile(r'\s+')
 
 
 def sanitize_href(href):
@@ -189,16 +190,16 @@ class Sanitizer(object):
             element = normalize_whitespace_in_text_or_tail(element)
 
             # remove empty tags if they are not explicitly allowed
-            if ((not element.text or whitespace_re.match(element.text)) and
+            if ((not element.text or only_whitespace_re.match(element.text)) and
                     element.tag not in self.empty and
                     not len(element)):
                 element.drop_tag()
                 continue
 
             # remove tags which only contain whitespace and/or <br>s
-            if (whitespace_re.match(element.text or '') and
+            if (only_whitespace_re.match(element.text or '') and
                     {e.tag for e in element} == {'br'} and
-                    all(whitespace_re.match(e.tail or '') for e in element)):
+                    all(only_whitespace_re.match(e.tail or '') for e in element)):
                 element.drop_tree()
                 continue
 
@@ -223,7 +224,7 @@ class Sanitizer(object):
                 if (
                     nx is not None and
                     nx.tag == 'br' and
-                    (not element.tail or whitespace_re.match(element.tail))
+                    (not element.tail or only_whitespace_re.match(element.tail))
                 ):
                     nx.drop_tag()
                     continue
@@ -241,7 +242,7 @@ class Sanitizer(object):
                 # Check whether we should merge adjacent elements of the same
                 # tag type
                 nx = element.getnext()
-                if (whitespace_re.match(element.tail or '') and
+                if (only_whitespace_re.match(element.tail or '') and
                         nx is not None and nx.tag == element.tag and
                         self.is_mergeable(element, nx)):
                     # Yes, we should. Tail is empty, that is, no text between
@@ -281,6 +282,8 @@ class Sanitizer(object):
             href = element.get('href')
             if href is not None:
                 element.set('href', self.sanitize_href(href))
+
+            element = normalize_whitespace_in_text_or_tail(element)
 
         if self.autolink:
             lxml.html.clean.autolink(doc)

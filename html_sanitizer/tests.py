@@ -41,7 +41,7 @@ class SanitizerTestCase(TestCase):
             ('<p><br/><br/><strong></strong>  <br/></p>', ''),
             (
                 '<p><br/><strong></strong>  <br/> abc</p>',
-                '<p>  abc</p>',
+                '<p> abc</p>',
             ),
             (
                 '<li><br>bla</li>',
@@ -103,7 +103,7 @@ class SanitizerTestCase(TestCase):
     def test_03_merge(self):
         entries = (
             ('<h2>foo</h2><h2>bar</h2>', '<h2>foo bar</h2>'),
-            ('<h2>foo  </h2>   <h2>   bar</h2>', '<h2>foo   bar</h2> '),
+            ('<h2>foo  </h2>   <h2>   bar</h2>', '<h2>foo bar</h2> '),
         )
 
         self.run_tests(entries)
@@ -111,7 +111,7 @@ class SanitizerTestCase(TestCase):
     def test_04_p_in_li(self):
         entries = (
             ('<li><p>foo</p></li>', '<li> foo </li>'),
-            ('<li>&nbsp;<p>foo</p> &#160; </li>', '<li>  foo  </li>'),
+            ('<li>&nbsp;<p>foo</p> &#160; </li>', '<li> foo </li>'),
             (
                 '<li>foo<p>bar<strong>xx</strong>rab</p><strong>baz</strong>'
                 'a<p>b</p>c</li>',
