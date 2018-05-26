@@ -60,21 +60,19 @@ def tag_replacer(from_, to_):
 
 
 def normalize_whitespace_in_text_or_tail(element):
-    if element.text or element.tail:
-        # remove elements containing only whitespace or linebreaks
-        if element.text:
-            while True:
-                text = whitespace_re.sub(' ', element.text)
-                if element.text == text:
-                    break
-                element.text = text
+    if element.text:
+        while True:
+            text = whitespace_re.sub(' ', element.text)
+            if element.text == text:
+                break
+            element.text = text
 
-        if element.tail:
-            while True:
-                text = whitespace_re.sub(' ', element.tail)
-                if element.tail == text:
-                    break
-                element.tail = text
+    if element.tail:
+        while True:
+            text = whitespace_re.sub(' ', element.tail)
+            if element.tail == text:
+                break
+            element.tail = text
 
     return element
 
