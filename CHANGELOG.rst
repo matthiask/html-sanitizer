@@ -5,6 +5,11 @@ Change log
 `Next version`_
 ===============
 
+- Fixed a few edge whitespace normalization edge cases and a bug where
+  removing an empty tag removed all whitespace.
+- Added `black <https://github.com/ambv/black>`_ for automatically
+  formatting the Python code.
+
 
 `1.4`_ (2018-03-29)
 ====================

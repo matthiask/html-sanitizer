@@ -8,13 +8,13 @@ from .sanitizer import Sanitizer
 
 
 @lru_cache.lru_cache(maxsize=None)
-def get_sanitizer(name='default'):
-    sanitizers = getattr(settings, 'HTML_SANITIZERS', {})
+def get_sanitizer(name="default"):
+    sanitizers = getattr(settings, "HTML_SANITIZERS", {})
     if name in sanitizers:
         return Sanitizer(sanitizers[name])
-    elif name == 'default':
+    elif name == "default":
         return Sanitizer()
     raise ImproperlyConfigured(
-        'Unknown sanitizer %r, did you define HTML_SANITIZERS[%r] in your'
-        ' Django settings module?' % (name, name)
+        "Unknown sanitizer %r, did you define HTML_SANITIZERS[%r] in your"
+        " Django settings module?" % (name, name)
     )
