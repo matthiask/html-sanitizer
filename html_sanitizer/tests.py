@@ -232,7 +232,7 @@ class SanitizerTestCase(TestCase):
             {
                 "tags": {"h1", "h2", "p", "a", "span"},
                 "attributes": {
-                    "a": ("href", "name", "target", "title", "id"),
+                    "a": ("href", "name", "target", "title", "id", "rel"),
                     "h1": ("class",),
                     "p": ("class",),
                     "span": ("class",),
@@ -266,7 +266,7 @@ class SanitizerTestCase(TestCase):
             {
                 "tags": {"h1", "h2", "p", "a", "span"},
                 "attributes": {
-                    "a": ("href", "name", "target", "title", "id"),
+                    "a": ("href", "name", "target", "title", "id", "rel"),
                     "h1": ("class",),
                     "p": ("class",),
                     "span": ("class",),
@@ -296,3 +296,13 @@ class SanitizerTestCase(TestCase):
 
     def test_16_emoji(self):
         self.run_tests([("<p>😂</p>", "<p>😂</p>"), ("<p>💕</p>", "<p>💕</p>")])
+
+    def test_target_blank(self):
+        self.run_tests(
+            [
+                (
+                    '<a href="#" target="_blank">test</a>',
+                    '<a href="#" target="_blank" rel="noopener">test</a>',
+                )
+            ]
+        )
