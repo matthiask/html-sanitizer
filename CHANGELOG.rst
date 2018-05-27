@@ -9,6 +9,11 @@ Change log
   removing an empty tag removed all whitespace.
 - Added `black <https://github.com/ambv/black>`_ for automatically
   formatting the Python code.
+- By default, links with ``target="_blank"`` get an additional
+  ``rel="noopener"`` attribute (`Article by Mathias Bynens
+  <https://mathiasbynens.github.io/rel-noopener/>`_). If you're
+  overriding the list of allowed attributes for anchor tags you must
+  add ``rel`` to your list.
 
 
 `1.4`_ (2018-03-29)
