@@ -72,6 +72,7 @@ class SanitizerTestCase(TestCase):
             ("<form><p>Zeile 2</p></form>", "<p> Zeile 2 </p>"),
             ("1<p> </p>2", "1 2"),
             ("1<p></p>2", "12"),
+            ("<p>son<strong>der</strong>bar</p>", "<p>son<strong>der</strong>bar</p>"),
         ]
 
         self.run_tests(entries)
