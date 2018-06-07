@@ -58,7 +58,6 @@ def italic_span_to_em(element):
 
 
 def tag_replacer(from_, to_):
-
     def replacer(element):
         if element.tag == from_:
             element.tag = to_
@@ -136,7 +135,6 @@ DEFAULT_SETTINGS = {
 
 
 class Sanitizer(object):
-
     def __init__(self, settings=None):
         self.__dict__.update(DEFAULT_SETTINGS)
         self.__dict__.update(settings or {})
