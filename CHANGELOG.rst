@@ -5,6 +5,10 @@ Change log
 `Next version`_
 ===============
 
+
+`1.6`_ (2018-06-29)
+====================
+
 - Fixed another edge case where a tag which is allowed to be empty was
   erroneously removed if it contained not only whitespace but also a
   ``<br>`` tag.
@@ -82,4 +86,5 @@ Change log
 .. _1.3: https://github.com/matthiask/html-sanitizer/compare/1.2...1.3
 .. _1.4: https://github.com/matthiask/html-sanitizer/compare/1.3...1.4
 .. _1.5: https://github.com/matthiask/html-sanitizer/compare/1.4...1.5
-.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.5...master
+.. _1.6: https://github.com/matthiask/html-sanitizer/compare/1.5...1.6
+.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.6...master
