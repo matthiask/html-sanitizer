@@ -73,8 +73,10 @@ class SanitizerTestCase(TestCase):
             ("1<p> </p>2", "1 2"),
             ("1<p></p>2", "12"),
             ("<p>son<strong>der</strong>bar</p>", "<p>son<strong>der</strong>bar</p>"),
-            # Empty a tags are allowed
+            # Empty a tags are allowed...
             ("<a>  </a>", "<a> </a>"),
+            # ...but breaks without any additional content are still removed
+            ("<a><br />  </a>", "<a> </a>"),
         ]
 
         self.run_tests(entries)

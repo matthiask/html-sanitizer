@@ -224,8 +224,9 @@ class Sanitizer(object):
 
             # remove tags which only contain whitespace and/or <br>s
             if (
-                only_whitespace_re.match(element.text or "")
-                and {e.tag for e in element} == {"br"}
+                element.tag not in self.empty
+                and only_whitespace_re.match(element.text or "")
+                and {e.tag for e in element} <= {"br"}
                 and all(only_whitespace_re.match(e.tail or "") for e in element)
             ):
                 element.drop_tree()
