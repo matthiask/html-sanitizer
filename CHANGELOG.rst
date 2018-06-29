@@ -5,6 +5,10 @@ Change log
 `Next version`_
 ===============
 
+- Fixed another edge case where a tag which is allowed to be empty was
+  erroneously removed if it contained not only whitespace but also a
+  ``<br>`` tag.
+
 
 `1.5`_ (2018-06-01)
 ====================
