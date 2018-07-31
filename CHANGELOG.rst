@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ===============
 
+- Added a system check which validates sanitizer configurations early
+  when using Django.
+
 
 `1.6`_ (2018-06-29)
 ====================
