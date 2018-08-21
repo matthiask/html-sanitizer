@@ -31,12 +31,11 @@ def check_configuration(app_configs, **kwargs):
         try:
             _get_sanitizer(name)
         except TypeError as exc:
-            errors.append(checks.Error(
-                "Invalid sanitizer configuration '%s': %s" % (
-                    name,
-                    exc,
-                ),
-                id="html_sanitizer.E001",
-            ))
+            errors.append(
+                checks.Error(
+                    "Invalid sanitizer configuration '%s': %s" % (name, exc),
+                    id="html_sanitizer.E001",
+                )
+            )
 
     return errors
