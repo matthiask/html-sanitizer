@@ -140,6 +140,13 @@ class Sanitizer(object):
         self.__dict__.update(settings or {})
 
         # Validate the settings.
+        if not self.tags:
+            raise TypeError(
+                "Empty list of allowed tags is not supported by the underlying"
+                " lxml cleaner. If you really do not want to pass any tags"
+                " pass a made-up tag name which will never exist in your"
+                " document."
+            )
         if not self.tags.issuperset(self.empty):
             raise TypeError(
                 'Tags in "empty", but not allowed: %r' % (self.empty - self.tags,)

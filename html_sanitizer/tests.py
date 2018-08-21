@@ -311,3 +311,18 @@ class SanitizerTestCase(TestCase):
                 )
             ]
         )
+
+    def test_remove_everything(self):
+        sanitizer = Sanitizer(
+            {"tags": {"__never"}, "attributes": {}, "empty": set(), "separate": set()}
+        )
+
+        self.run_tests(
+            [
+                (
+                    '<span style="color:#000000;font-weight:bold">11:44:14</span>',
+                    "11:44:14",
+                )
+            ],
+            sanitizer=sanitizer,
+        )
