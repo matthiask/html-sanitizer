@@ -5,7 +5,7 @@ HTML sanitizer
 .. image:: https://travis-ci.org/matthiask/html-sanitizer.svg?branch=master
     :target: https://travis-ci.org/matthiask/html-sanitizer
 
-This is a whitelist-based and very opinionated HTML sanitizer that
+This is a allowlist-based and very opinionated HTML sanitizer that
 can be used both for untrusted and trusted sources. It attempts to clean
 up the mess made by various rich text editors and or copy-pasting to
 make styling of webpages simpler and more consistent. It builds on the
@@ -13,7 +13,7 @@ excellent HTML cleaner in lxml_ to make the result both valid and safe.
 
 HTML sanitizer goes further than e.g. bleach_ in that it not only
 ensures that content is safe and tags and attributes conform to a given
-whitelist, but also applies additional transforms to HTML fragments.
+allowlist, but also applies additional transforms to HTML fragments.
 
 Goals
 =====

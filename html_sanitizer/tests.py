@@ -137,7 +137,7 @@ class SanitizerTestCase(TestCase):
 
         self.run_tests(entries)
 
-    def test_06_whitelist(self):
+    def test_06_allowlist(self):
         entries = (
             ('<script src="http://abc">foo</script>', ""),
             ('<script type="text/javascript">foo</script>', ""),
