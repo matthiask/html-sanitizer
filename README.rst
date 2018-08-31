@@ -53,27 +53,29 @@ Settings
 The default settings are::
 
     DEFAULT_SETTINGS = {
-        'tags': {
-            'a', 'h1', 'h2', 'h3', 'strong', 'em', 'p', 'ul', 'ol',
-            'li', 'br', 'sub', 'sup', 'hr',
+        "tags": {
+            "a", "h1", "h2", "h3", "strong", "em", "p", "ul", "ol",
+            "li", "br", "sub", "sup", "hr",
         },
-        'attributes': {
-            'a': ('href', 'name', 'target', 'title', 'id'),
-        },
-        'empty': {'hr', 'a', 'br'},
-        'separate': {'a', 'p', 'li'},
-        'add_nofollow': False,
-        'autolink': False,
-        'sanitize_href': html_sanitizer.sanitizer.sanitize_href,
-        'element_preprocessors': [
-            html_sanitizer.sanitizer.bold_span_to_strong,
-            html_sanitizer.sanitizer.italic_span_to_em,
-            html_sanitizer.sanitizer.tag_replacer('b', 'strong'),
-            html_sanitizer.sanitizer.tag_replacer('i', 'em'),
+        "attributes": {"a": ("href", "name", "target", "title", "id", "rel")},
+        "empty": {"hr", "a", "br"},
+        "separate": {"a", "p", "li"},
+        "add_nofollow": False,
+        "autolink": False,
+        "sanitize_href": sanitize_href,
+        "element_preprocessors": [
+            # convert span elements into em/strong if a matching style rule
+            # has been found. strong has precedence, strong & em at the same
+            # time is not supported
+            bold_span_to_strong,
+            italic_span_to_em,
+            tag_replacer("b", "strong"),
+            tag_replacer("i", "em"),
+            tag_replacer("form", "p"),
+            target_blank_noopener,
         ],
-        'element_postprocessors': [
-        ],
-        'is_mergeable': lambda e1, e2: True,
+        "element_postprocessors": [],
+        "is_mergeable": lambda e1, e2: True,
     }
 
 The keys' meaning is as follows:
