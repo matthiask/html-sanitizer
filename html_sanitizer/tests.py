@@ -147,7 +147,7 @@ class SanitizerTestCase(TestCase):
 
     def test_07_configuration(self):
         sanitizer = Sanitizer(
-            {"tags": {"h1", "h2"}, "empty": set(), "separate": set(), "attributes": {}}
+            {"tags": ["h1", "h2"], "empty": (), "separate": (), "attributes": {}}
         )
 
         entries = (

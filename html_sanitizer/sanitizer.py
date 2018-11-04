@@ -139,6 +139,11 @@ class Sanitizer(object):
         self.__dict__.update(DEFAULT_SETTINGS)
         self.__dict__.update(settings or {})
 
+        # Allow iterables of any kind, not just sets.
+        self.tags = set(self.tags)
+        self.empty = set(self.empty)
+        self.separate = set(self.separate)
+
         # Validate the settings.
         if not self.tags:
             raise TypeError(

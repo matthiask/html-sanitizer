@@ -7,6 +7,11 @@ Change log
 
 - Added a system check which validates sanitizer configurations early
   when using Django.
+- Fixed an edge case where passing in an empty allowed tags list would
+  unexpectedly and silently not remove any tags at all (because that's
+  the way lxml's cleaner works).
+- Changed the sanitizer ``tags``, ``empty`` and ``separate`` options to
+  also accept any iterable, not just sets.
 
 
 `1.6`_ (2018-06-29)
