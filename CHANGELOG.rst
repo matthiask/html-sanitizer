@@ -12,6 +12,8 @@ Change log
   the way lxml's cleaner works).
 - Changed the sanitizer ``tags``, ``empty`` and ``separate`` options to
   also accept any iterable, not just sets.
+- Changed the ``lru_cache`` import in the Django module to try
+  ``functools`` first.
 
 
 `1.6`_ (2018-06-29)

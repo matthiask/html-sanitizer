@@ -3,9 +3,14 @@ from __future__ import absolute_import, unicode_literals
 from django.conf import settings
 from django.core import checks
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import lru_cache
 
 from .sanitizer import Sanitizer
+
+try:
+    from functools import lru_cache
+except ImportError:  # pragma: no cover
+    # Django versions older than 3.0
+    from django.utils.lru_cache import lru_cache
 
 
 def _get_sanitizer(name="default"):
@@ -20,7 +25,7 @@ def _get_sanitizer(name="default"):
     )
 
 
-get_sanitizer = lru_cache.lru_cache(maxsize=None)(_get_sanitizer)
+get_sanitizer = lru_cache(maxsize=None)(_get_sanitizer)
 
 
 @checks.register()
