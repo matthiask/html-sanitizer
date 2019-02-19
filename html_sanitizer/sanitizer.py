@@ -116,6 +116,7 @@ DEFAULT_SETTINGS = {
     "attributes": {"a": ("href", "name", "target", "title", "id", "rel")},
     "empty": {"hr", "a", "br"},
     "separate": {"a", "p", "li"},
+    "whitespace": {"br"},
     "add_nofollow": False,
     "autolink": False,
     "sanitize_href": sanitize_href,
@@ -143,6 +144,7 @@ class Sanitizer(object):
         self.tags = set(self.tags)
         self.empty = set(self.empty)
         self.separate = set(self.separate)
+        self.whitespace = set(self.whitespace)
 
         # Validate the settings.
         if not self.tags:
@@ -238,7 +240,7 @@ class Sanitizer(object):
             if (
                 element.tag not in self.empty
                 and only_whitespace_re.match(element.text or "")
-                and {e.tag for e in element} <= {"br"}
+                and {e.tag for e in element} <= self.whitespace
                 and all(only_whitespace_re.match(e.tail or "") for e in element)
             ):
                 element.drop_tree()
@@ -259,13 +261,13 @@ class Sanitizer(object):
                         element.text,
                     )
 
-            elif element.tag == "br":
+            elif element.tag in self.whitespace:
                 # Drop the next element if
                 # 1. it is a <br> too and 2. there is no content in-between
                 nx = element.getnext()
                 if (
                     nx is not None
-                    and nx.tag == "br"
+                    and nx.tag == element.tag
                     and (not element.tail or only_whitespace_re.match(element.tail))
                 ):
                     nx.drop_tag()
@@ -274,7 +276,7 @@ class Sanitizer(object):
             if not element.text:
                 # No text before first child and first child is a <br>: Drop it
                 first = list(element)[0] if list(element) else None
-                if first is not None and first.tag == "br":
+                if first is not None and first.tag in self.whitespace:
                     first.drop_tag()
                     # Maybe we have more than one <br>
                     backlog.append(element)

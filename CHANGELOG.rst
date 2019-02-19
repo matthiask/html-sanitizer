@@ -17,6 +17,9 @@ Change log
 - Fixed the tag merging to also check tags in ``empty``. This means that
   e.g. consecutive ``<hr>`` tags are also merged now when using the
   default settings.
+- Made it possible to override the set of tags processed as whitespace.
+  The default set is ``{"br"}`` which preserves the current behavior of
+  stripping breaks from the beginning or end of tags' content.
 
 
 `1.6`_ (2018-06-29)

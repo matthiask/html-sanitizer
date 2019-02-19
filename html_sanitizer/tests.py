@@ -338,3 +338,16 @@ class SanitizerTestCase(TestCase):
                 ),
             ]
         )
+
+    def test_keep_consecutive_br_tags(self):
+        sanitizer = Sanitizer({"whitespace": set(), "separate": {"br"}})
+        self.run_tests(
+            [
+                ("<p>Hello<br><br>World</p>", "<p>Hello<br><br>World</p>"),
+                ("<p>Hello<br><br></p>", "<p>Hello<br><br></p>"),
+                ("<p><br><br>World</p>", "<p><br><br>World</p>"),
+                ("<p><br><br></p>", "<p><br><br></p>"),
+                ("<p><br></p><hr><br></p>", "<p><br></p><hr><br>"),
+            ],
+            sanitizer=sanitizer,
+        )

@@ -60,6 +60,7 @@ The default settings are::
         "attributes": {"a": ("href", "name", "target", "title", "id", "rel")},
         "empty": {"hr", "a", "br"},
         "separate": {"a", "p", "li"},
+        "whitespace": {"br"},
         "add_nofollow": False,
         "autolink": False,
         "sanitize_href": sanitize_href,
@@ -86,6 +87,8 @@ The keys' meaning is as follows:
   (containing no text or only whitespace) are dropped.
 - ``separate``: Tags which are not merged if they appear as siblings. By
   default, tags of the same type are merged.
+- ``whitespace``: Tags which are treated as whitespace and removed from
+  the beginning or end of other tags' content.
 - ``add_nofollow``: Whether to add ``rel="nofollow"`` to all links.
 - ``autolink``: Enable lxml_'s autolinker_. May be either a boolean or a
   dictionary; a dictionary is passed as keyword arguments to
