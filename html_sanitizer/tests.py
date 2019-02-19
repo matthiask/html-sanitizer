@@ -326,3 +326,15 @@ class SanitizerTestCase(TestCase):
             ],
             sanitizer=sanitizer,
         )
+
+    def test_more_merging(self):
+        self.run_tests(
+            [
+                ("<p><hr></p>", "<hr>"),
+                ("<hr><hr><hr>", "<hr>"),
+                (
+                    '<a name="a"></a><a name="b"></a>',
+                    '<a name="a"></a><a name="b"></a>',
+                ),
+            ]
+        )

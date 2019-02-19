@@ -280,7 +280,7 @@ class Sanitizer(object):
                     backlog.append(element)
                     continue
 
-            if element.tag in (self.tags - self.separate - self.empty):
+            if element.tag in (self.tags - self.separate):
                 # Check whether we should merge adjacent elements of the same
                 # tag type
                 nx = element.getnext()

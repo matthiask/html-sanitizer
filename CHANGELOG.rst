@@ -14,6 +14,9 @@ Change log
   also accept any iterable, not just sets.
 - Changed the ``lru_cache`` import in the Django module to try
   ``functools`` first.
+- Fixed the tag merging to also check tags in ``empty``. This means that
+  e.g. consecutive ``<hr>`` tags are also merged now when using the
+  default settings.
 
 
 `1.6`_ (2018-06-29)
