@@ -5,6 +5,10 @@ Change log
 `Next version`_
 ===============
 
+
+`1.7`_ (2019-02-19)
+====================
+
 - Added a system check which validates sanitizer configurations early
   when using Django.
 - Fixed an edge case where passing in an empty allowed tags list would
@@ -103,4 +107,5 @@ Change log
 .. _1.4: https://github.com/matthiask/html-sanitizer/compare/1.3...1.4
 .. _1.5: https://github.com/matthiask/html-sanitizer/compare/1.4...1.5
 .. _1.6: https://github.com/matthiask/html-sanitizer/compare/1.5...1.6
-.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.6...master
+.. _1.7: https://github.com/matthiask/html-sanitizer/compare/1.6...1.7
+.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.7...master
