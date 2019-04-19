@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ===============
 
+- Actually added support for customizing lxml's autolinking behavior
+  using a dictionary argument.
+
 
 `1.7`_ (2019-02-19)
 ====================
