@@ -334,11 +334,16 @@ class Sanitizer(object):
         elif isinstance(self.autolink, dict):
             lxml.html.clean.autolink(doc, **self.autolink)
 
+        all_allowed_attrs = {
+            attr for attrs in self.attributes.values() for attr in attrs
+        }
+
         # Run cleaner again, but this time with even more strict settings
         lxml.html.clean.Cleaner(
             allow_tags=self.tags,
             remove_unknown_tags=False,
             safe_attrs_only=True,
+            safe_attrs=lxml.html.defs.safe_attrs | all_allowed_attrs,
             add_nofollow=self.add_nofollow,
             forms=False,
         )(doc)
