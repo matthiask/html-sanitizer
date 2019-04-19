@@ -213,7 +213,12 @@ class SanitizerTestCase(TestCase):
                 (
                     "<p>https://github.com/</p>",
                     '<p><a href="https://github.com/">https://github.com/</a></p>',
-                )
+                ),
+                (
+                    # localhost is not autolinked by default by lxml
+                    "<p>https://localhost/</p>",
+                    "<p>https://localhost/</p>",
+                ),
             ],
             sanitizer=sanitizer,
         )
@@ -227,6 +232,22 @@ class SanitizerTestCase(TestCase):
                     '<p><a href="https://github.com/"'
                     ' rel="nofollow">https://github.com/</a></p>',
                 )
+            ],
+            sanitizer=sanitizer,
+        )
+
+        sanitizer = Sanitizer({"autolink": {"avoid_hosts": []}})
+
+        self.run_tests(
+            [
+                (
+                    "<p>https://github.com/</p>",
+                    '<p><a href="https://github.com/">https://github.com/</a></p>',
+                ),
+                (
+                    "<p>https://localhost/</p>",
+                    '<p><a href="https://localhost/">https://localhost/</a></p>',
+                ),
             ],
             sanitizer=sanitizer,
         )
