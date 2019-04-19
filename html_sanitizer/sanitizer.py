@@ -329,7 +329,7 @@ class Sanitizer(object):
 
             element = normalize_whitespace_in_text_or_tail(element)
 
-        if self.autolink:
+        if self.autolink is True:
             lxml.html.clean.autolink(doc)
         elif isinstance(self.autolink, dict):
             lxml.html.clean.autolink(doc, **self.autolink)
