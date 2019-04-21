@@ -384,3 +384,31 @@ class SanitizerTestCase(TestCase):
             ],
             sanitizer=sanitizer,
         )
+
+    def test_blob(self):
+        source = """\
+<p class="western" style="margin-left: 0.39in; text-indent: -0.39in; margin-top: 0.25in; margin-bottom: 0in; line-height: 0.19in" lang="de-DE" align="justify">
+<font style="font-size: 12pt" size="3"><b>1.2.	Definition des
+Spesenbegriffs</b></font></p>
+<p class="western" style="margin-left: 0.39in; margin-top: 0.13in; margin-bottom: 0in; line-height: 0.19in" lang="de-DE" align="justify">
+<font style="font-size: 12pt" size="3">Als Spesen im Sinne dieses
+Reglements gelten die Auslagen, die einem Mitarbeitenden im Interesse
+des Arbeitgebers angefallen sind. Sämtliche Mitarbeitende sind
+verpflichtet, ihre Spesen im Rahmen dieses Reglements möglichst tief
+zu halten. Aufwendungen, die für die Arbeitsausführung nicht
+notwendig waren, werden von der Firma nicht übernommen, sondern sind
+von den Mitarbeitenden selbst zu tragen.</font></p>
+<p class="western" style="margin-left: 0.39in; margin-top: 0.13in; margin-bottom: 0in; line-height: 0.19in" lang="de-DE" align="justify">
+<font style="font-size: 12pt" size="3">Im Wesentlichen werden den
+Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
+<ul><li><p class="western" style="margin-top: 0.13in; margin-bottom: 0in; line-height: 0.19in" lang="de-DE" align="justify"> <font style="font-size: 12pt" size="3">-	Fahrtkosten					(nachfolgend 2.)</font></p> </li><li><p class="western" style="margin-bottom: 0in; line-height: 0.19in" lang="de-DE" align="justify"> <font style="font-size: 12pt" size="3">-	Verpflegungskosten			(nachfolgend 3.)</font></p> </li><li><p class="western" style="margin-bottom: 0in; line-height: 0.19in" lang="de-DE" align="justify"> <font style="font-size: 12pt" size="3">-	Übernachtungskosten			(nachfolgend 4.)</font></p> </li><li><p class="western" style="margin-bottom: 0in; line-height: 0.19in" lang="de-DE" align="justify"> <font style="font-size: 12pt" size="3">-	Übrige Kosten				(nachfolgend 5.)</font></p> </li></ul>"""  # noqa
+
+        result = """\
+<p> <strong>1.2. Definition des Spesenbegriffs</strong></p> <p> Als Spesen im Sinne dieses Reglements gelten die Auslagen, die einem Mitarbeitenden im Interesse des Arbeitgebers angefallen sind. Sämtliche Mitarbeitende sind verpflichtet, ihre Spesen im Rahmen dieses Reglements möglichst tief zu halten. Aufwendungen, die für die Arbeitsausführung nicht notwendig waren, werden von der Firma nicht übernommen, sondern sind von den Mitarbeitenden selbst zu tragen.</p> <p> Im Wesentlichen werden den Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</p> <ul><li> - Fahrtkosten (nachfolgend 2.) </li><li> - Verpflegungskosten (nachfolgend 3.) </li><li> - Übernachtungskosten (nachfolgend 4.) </li><li> - Übrige Kosten (nachfolgend 5.) </li></ul>"""  # noqa
+
+        # XXX An exact match isn't really required. Using Django's
+        # assertHTMLEqual would be great but we'd have to depend on Django in
+        # the test suite for this (not a big problem really, because then we
+        # could also test html_sanitizer.django but I didn't yet *have* to do
+        # this)
+        self.run_tests([(source, result)])
