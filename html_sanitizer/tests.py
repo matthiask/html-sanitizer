@@ -372,3 +372,15 @@ class SanitizerTestCase(TestCase):
             ],
             sanitizer=sanitizer,
         )
+
+    def test_custom_allowed_attribute(self):
+        sanitizer = Sanitizer({"attributes": {"a": ("href", "custom")}})
+        self.run_tests(
+            [
+                (
+                    '<a href="http://example.com" custom="1" abc="2">Test</a>',
+                    '<a href="http://example.com" custom="1">Test</a>',
+                )
+            ],
+            sanitizer=sanitizer,
+        )
