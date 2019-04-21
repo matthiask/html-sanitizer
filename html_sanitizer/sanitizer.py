@@ -338,7 +338,7 @@ class Sanitizer(object):
         lxml.html.clean.Cleaner(
             allow_tags=self.tags,
             remove_unknown_tags=False,
-            safe_attrs_only=False,
+            safe_attrs_only=False,  # Our attributes allowlist is sufficient.
             add_nofollow=self.add_nofollow,
             forms=False,
         )(doc)
