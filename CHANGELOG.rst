@@ -7,6 +7,7 @@ Change log
 
 - Actually added support for customizing lxml's autolinking behavior
   using a dictionary argument.
+- Stopped removing explicitly allowed attributes.
 
 
 `1.7`_ (2019-02-19)
