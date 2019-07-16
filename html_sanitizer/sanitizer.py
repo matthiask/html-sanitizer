@@ -9,8 +9,6 @@ import lxml.html.clean
 
 
 __all__ = ("Sanitizer",)
-only_whitespace_re = re.compile(r"^\s*$")
-whitespace_re = re.compile(r"\s+")
 
 
 def sanitize_href(href):
@@ -25,7 +23,31 @@ def sanitize_href(href):
     return "#"
 
 
-def normalize_overall_whitespace(html):
+typographic_whitespace_names = [
+    "NO-BREAK SPACE",
+    "EN QUAD",
+    "EM QUAD",
+    "EN SPACE",
+    "EM SPACE",
+    "THREE-PER-EM SPACE",
+    "FOUR-PER-EM SPACE",
+    "SIX-PER-EM SPACE",
+    "FIGURE SPACE",
+    "PUNCTUATION SPACE",
+    "THIN SPACE",
+    "HAIR SPACE",
+    "NARROW NO-BREAK SPACE",
+    "MEDIUM MATHEMATICAL SPACE",
+    "IDEOGRAPHIC SPACE"
+]
+
+typographic_whitespace = "".join({unicodedata.lookup(n)
+    for n in typographic_whitespace_names})
+
+
+def normalize_overall_whitespace(html,
+        keep_typographic_whitespace=False,
+        whitespace_re=None):
     # remove all sorts of newline and nbsp characters
     whitespace = [
         "\n",
@@ -34,14 +56,20 @@ def normalize_overall_whitespace(html):
         "\r",
         "&#13;",
         "&#xd;",
-        "\xa0",
-        "&nbsp;",
-        "&#160;",
-        "&#xa0",
     ]
+    if not keep_typographic_whitespace:
+        # non-breaking space representations
+        whitespace += [
+            "\xa0",
+            "&nbsp;",
+            "&#160;",
+            "&#xa0;",
+        ]
+    if whitespace_re is None:
+        whitespace_re = r"\s+"
     for ch in whitespace:
         html = html.replace(ch, " ")
-    html = re.sub(r"(?u)\s+", " ", html)
+    html = re.sub(whitespace_re, " ", html)
     return html
 
 
@@ -78,7 +106,9 @@ def target_blank_noopener(element):
     return element
 
 
-def normalize_whitespace_in_text_or_tail(element):
+def normalize_whitespace_in_text_or_tail(element, whitespace_re=None):
+    if whitespace_re is None:
+        whitespace_re = r"\s+"
     if element.text:
         while True:
             text = whitespace_re.sub(" ", element.text)
@@ -117,6 +147,7 @@ DEFAULT_SETTINGS = {
     "empty": {"hr", "a", "br"},
     "separate": {"a", "p", "li"},
     "whitespace": {"br"},
+    "keep_typographic_whitespace": False,
     "add_nofollow": False,
     "autolink": False,
     "sanitize_href": sanitize_href,
@@ -145,6 +176,13 @@ class Sanitizer(object):
         self.empty = set(self.empty)
         self.separate = set(self.separate)
         self.whitespace = set(self.whitespace)
+
+        if self.keep_typographic_whitespace:
+            re_whitespace = r"[^\S%s]" % typographic_whitespace
+        else:
+            re_whitespace = r"\s"
+        self.only_whitespace_re = re.compile(r"^%s*$" % re_whitespace)
+        self.whitespace_re = re.compile(r"%s+" % re_whitespace)
 
         # Validate the settings.
         if not self.tags:
@@ -191,7 +229,9 @@ class Sanitizer(object):
         Requires ``lxml`` and, for especially broken HTML, ``beautifulsoup4``.
         """
 
-        html = normalize_overall_whitespace(html)
+        html = normalize_overall_whitespace(html,
+            keep_typographic_whitespace=self.keep_typographic_whitespace,
+            whitespace_re=self.whitespace_re)
         html = "<div>%s</div>" % html
         try:
             doc = lxml.html.fromstring(html)
@@ -216,6 +256,7 @@ class Sanitizer(object):
         # walk the tree recursively, because we want to be able to remove
         # previously emptied elements completely
         backlog = deque(doc.iterdescendants())
+
         while True:
             try:
                 element = backlog.pop()
@@ -225,11 +266,12 @@ class Sanitizer(object):
             for processor in self.element_preprocessors:
                 element = processor(element)
 
-            element = normalize_whitespace_in_text_or_tail(element)
+            element = normalize_whitespace_in_text_or_tail(element,
+                whitespace_re=self.whitespace_re)
 
             # remove empty tags if they are not explicitly allowed
             if (
-                (not element.text or only_whitespace_re.match(element.text))
+                (not element.text or self.only_whitespace_re.match(element.text))
                 and element.tag not in self.empty
                 and not len(element)
             ):
@@ -239,9 +281,9 @@ class Sanitizer(object):
             # remove tags which only contain whitespace and/or <br>s
             if (
                 element.tag not in self.empty
-                and only_whitespace_re.match(element.text or "")
+                and self.only_whitespace_re.match(element.text or "")
                 and {e.tag for e in element} <= self.whitespace
-                and all(only_whitespace_re.match(e.tail or "") for e in element)
+                and all(self.only_whitespace_re.match(e.tail or "") for e in element)
             ):
                 element.drop_tree()
                 continue
@@ -268,7 +310,7 @@ class Sanitizer(object):
                 if (
                     nx is not None
                     and nx.tag == element.tag
-                    and (not element.tail or only_whitespace_re.match(element.tail))
+                    and (not element.tail or self.only_whitespace_re.match(element.tail))
                 ):
                     nx.drop_tag()
                     continue
@@ -287,7 +329,7 @@ class Sanitizer(object):
                 # tag type
                 nx = element.getnext()
                 if (
-                    only_whitespace_re.match(element.tail or "")
+                    self.only_whitespace_re.match(element.tail or "")
                     and nx is not None
                     and nx.tag == element.tag
                     and self.is_mergeable(element, nx)
@@ -327,7 +369,8 @@ class Sanitizer(object):
             if href is not None:
                 element.set("href", self.sanitize_href(href))
 
-            element = normalize_whitespace_in_text_or_tail(element)
+            element = normalize_whitespace_in_text_or_tail(element,
+                whitespace_re=self.whitespace_re)
 
         if self.autolink is True:
             lxml.html.clean.autolink(doc)
@@ -352,6 +395,9 @@ class Sanitizer(object):
         html = re.sub(r"^<div>|</div>$", "", html)
 
         # normalize unicode
-        html = unicodedata.normalize("NFKC", html)
+        if self.keep_typographic_whitespace:
+            html = unicodedata.normalize("NFC", html)
+        else:
+            html = unicodedata.normalize("NFKC", html)
 
         return html
