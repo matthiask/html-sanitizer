@@ -170,8 +170,18 @@ class Sanitizer(object):
             re_whitespace = r"[^\S%s]" % typographic_whitespace
         else:
             re_whitespace = r"\s"
-        self.only_whitespace_re = re.compile(r"^%s*$" % re_whitespace)
-        self.whitespace_re = re.compile(r"%s+" % re_whitespace)
+        import sys
+
+        if int(sys.version.split(".")[0]) == 2:
+            force_unicode_prefix = "(?u)"
+        else:
+            force_unicode_prefix = ""
+        self.only_whitespace_re = re.compile(
+            r"%s^%s*$" % (force_unicode_prefix, re_whitespace)
+        )
+        self.whitespace_re = re.compile(
+            r"%s%s+" % (force_unicode_prefix, re_whitespace)
+        )
 
         # Validate the settings.
         if not self.tags:
