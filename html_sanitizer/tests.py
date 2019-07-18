@@ -24,7 +24,11 @@ class SanitizerTestCase(TestCase):
                     result,
                     after,
                     "Cleaning '%s', expected '%s' but got '%s'"
-                    % (before.encode('unicode-escape'), after.encode('unicode-escape'), result.encode('unicode-escape')),
+                    % (
+                        before.encode("unicode-escape"),
+                        after.encode("unicode-escape"),
+                        result.encode("unicode-escape"),
+                    ),
                 )
 
     def test_01_sanitize(self):
@@ -414,33 +418,31 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
         self.run_tests([(source, result)])
 
     def test_keep_typographic_whitespace(self):
-        sanitizer = Sanitizer(
-            {"keep_typographic_whitespace": True}
-        )
+        sanitizer = Sanitizer({"keep_typographic_whitespace": True})
 
         # Note some unicode normalization of typographic whitespace
         self.run_tests(
             [
                 (
-                    "\u200a\u2001\u202f\u2004\xa0\u2007\u2002\u2000\u2003\u2009\u205f\u2005\u2006\u2008\u3000",
-                    "\u200a\u2003\u202f\u2004\xa0\u2007\u2002\u2002\u2003\u2009\u205f\u2005\u2006\u2008\u3000"
+                    "\u200a\u2001\u202f\u2004\xa0\u2007\u2002\u2000"
+                    "\u2003\u2009\u205f\u2005\u2006\u2008\u3000",
+                    "\u200a\u2003\u202f\u2004\xa0\u2007\u2002\u2002"
+                    "\u2003\u2009\u205f\u2005\u2006\u2008\u3000",
                 )
             ],
             sanitizer=sanitizer,
         )
 
     def test_strip_typographic_whitespace(self):
-        sanitizer = Sanitizer(
-            {"keep_typographic_whitespace": False}
-        )
+        sanitizer = Sanitizer({"keep_typographic_whitespace": False})
 
         self.run_tests(
             [
                 (
-                    "\u200a\u2001\u202f\u2004\xa0\u2007\u2002\u2000\u2003\u2009\u205f\u2005\u2006\u2008\u3000",
-                    ' '
+                    "\u200a\u2001\u202f\u2004\xa0\u2007\u2002\u2000"
+                    "\u2003\u2009\u205f\u2005\u2006\u2008\u3000",
+                    " ",
                 )
             ],
             sanitizer=sanitizer,
         )
-
