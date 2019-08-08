@@ -61,6 +61,7 @@ The default settings are::
         "empty": {"hr", "a", "br"},
         "separate": {"a", "p", "li"},
         "whitespace": {"br"},
+        "keep_typographic_whitespace": False,
         "add_nofollow": False,
         "autolink": False,
         "sanitize_href": sanitize_href,
@@ -89,6 +90,8 @@ The keys' meaning is as follows:
   default, tags of the same type are merged.
 - ``whitespace``: Tags which are treated as whitespace and removed from
   the beginning or end of other tags' content.
+- ``keep_typographic_whitespace``: Keep typographically used space
+  characters like non-breaking space etc.
 - ``add_nofollow``: Whether to add ``rel="nofollow"`` to all links.
 - ``autolink``: Enable lxml_'s autolinker_. May be either a boolean or a
   dictionary; a dictionary is passed as keyword arguments to
