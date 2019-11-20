@@ -132,7 +132,7 @@ DEFAULT_SETTINGS = {
         "sup",
         "hr",
     },
-    "attributes": {"a": ("href", "name", "target", "title", "id", "rel")},
+    "attributes": {"a": ("href", "name", "target", "title", "rel")},
     "empty": {"hr", "a", "br"},
     "separate": {"a", "p", "li"},
     "whitespace": {"br"},
