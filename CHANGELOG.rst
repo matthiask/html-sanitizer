@@ -8,6 +8,12 @@ Change log
 - Actually added support for customizing lxml's autolinking behavior
   using a dictionary argument.
 - Stopped removing explicitly allowed attributes.
+- Removed ``id`` from allowed attributes of ``<a>`` tags to provide
+  an additional layer of defense against DOM clobbering attacks.
+- Added an element preprocessor which assigns the ``id`` value to
+  the ``name`` attribute of anchors if ``name`` isn't set or empty. This
+  should provide additional backwards compatibility making the ``id``
+  removal less of a problem when using named anchors.
 
 
 `1.7`_ (2019-02-19)

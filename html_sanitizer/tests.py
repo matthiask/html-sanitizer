@@ -446,3 +446,12 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
             ],
             sanitizer=sanitizer,
         )
+
+    def test_anchor_names(self):
+        self.run_tests(
+            [
+                ('<a name="test" id="test"></a>', '<a name="test"></a>',),
+                ('<a name="test"></a>', '<a name="test"></a>',),
+                ('<a id="test"></a>', '<a name="test"></a>',),
+            ],
+        )

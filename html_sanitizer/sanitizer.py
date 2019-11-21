@@ -95,6 +95,16 @@ def target_blank_noopener(element):
     return element
 
 
+def anchor_id_to_name(element):
+    if (
+        element.tag == "a"
+        and element.attrib.get("id")
+        and not element.attrib.get("name")
+    ):
+        element.attrib["name"] = element.attrib["id"]
+    return element
+
+
 def normalize_whitespace_in_text_or_tail(element, whitespace_re=None):
     if whitespace_re is None:
         whitespace_re = r"\s+"
@@ -150,6 +160,7 @@ DEFAULT_SETTINGS = {
         tag_replacer("i", "em"),
         tag_replacer("form", "p"),
         target_blank_noopener,
+        anchor_id_to_name,
     ],
     "element_postprocessors": [],
 }
