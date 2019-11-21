@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ===============
 
+`1.8`_ (2019-11-21)
+====================
+
 - Actually added support for customizing lxml's autolinking behavior
   using a dictionary argument.
 - Stopped removing explicitly allowed attributes.
@@ -118,4 +121,5 @@ Change log
 .. _1.5: https://github.com/matthiask/html-sanitizer/compare/1.4...1.5
 .. _1.6: https://github.com/matthiask/html-sanitizer/compare/1.5...1.6
 .. _1.7: https://github.com/matthiask/html-sanitizer/compare/1.6...1.7
-.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.7...master
+.. _1.8: https://github.com/matthiask/html-sanitizer/compare/1.7...1.8
+.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.8...master
