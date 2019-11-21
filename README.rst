@@ -160,6 +160,12 @@ The ``get_sanitizer`` function caches sanitizer instances, so feel free
 to call it as often as you want to.
 
 
+Security issues
+===============
+
+Please report security issues to me directly at mk@feinheit.ch.
+
+
 .. _bleach: https://bleach.readthedocs.io/
 .. _Django: https://www.djangoproject.com/
 .. _django-content-editor: http://django-content-editor.readthedocs.io/
