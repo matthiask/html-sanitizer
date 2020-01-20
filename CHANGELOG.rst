@@ -5,6 +5,7 @@ Change log
 `Next version`_
 ===============
 
+- Added Python 3.8 to the CI matrix.
 - Be able to keep the ``<style>`` tag by adding it to ``tags``.
 
 
