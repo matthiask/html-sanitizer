@@ -8,6 +8,13 @@ python:
   - "3.6"
   - "3.7"
   - "3.8"
+matrix:
+  include:
+    - python: 3.7
+      env: REQ="black flake8"
+      script:
+        - flake8 .
+        - black --check html_sanitizer
 script:
   - pip install -U pip wheel
   - pip install beautifulsoup4 flake8 lxml
