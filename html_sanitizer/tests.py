@@ -10,7 +10,6 @@ from .sanitizer import Sanitizer
 
 class SanitizerTestCase(TestCase):
     if not hasattr(TestCase, "subTest"):
-
         @contextmanager
         def subTest(self, *args, **kwargs):
             yield
@@ -454,4 +453,34 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
                 ('<a name="test"></a>', '<a name="test"></a>',),
                 ('<a id="test"></a>', '<a name="test"></a>',),
             ],
+        )
+
+    def test_style_tag(self):
+        # don't allow style tag (default)
+        self.run_tests(
+            [
+                ('foo<style>*{color: red}</style>bar', 'foobar'),
+            ],
+            sanitizer=Sanitizer({
+                "tags": {"impossible tag"},
+                "attributes": {},
+                "empty": set(),
+                "separate": set(),
+            })
+        )
+
+        # allow style tag
+        self.run_tests(
+            [
+                (
+                    'foo<style>*{color: red}</style>bar',
+                    'foo<style>*{color: red}</style>bar'
+                ),
+            ],
+            sanitizer=Sanitizer({
+                "tags": {"style"},
+                "attributes": {},
+                "empty": set(),
+                "separate": set(),
+            })
         )
