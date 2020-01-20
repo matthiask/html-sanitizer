@@ -470,18 +470,41 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
             ),
         )
 
-        # allow style tag
+        # allow style tag but no style attribute
         self.run_tests(
             [
                 (
                     "foo<style>*{color: red}</style>bar",
                     "foo<style>*{color: red}</style>bar",
                 ),
+                ('<h2 style="font-weight:bold">bla</h2>', "<h2>bla</h2>"),
             ],
             sanitizer=Sanitizer(
                 {
-                    "tags": {"style"},
+                    "tags": {"h2", "style"},
                     "attributes": {},
+                    "empty": set(),
+                    "separate": set(),
+                }
+            ),
+        )
+
+        # allow style tag and style attribute
+        self.run_tests(
+            [
+                (
+                    "foo<style>*{color: red}</style>bar",
+                    "foo<style>*{color: red}</style>bar",
+                ),
+                (
+                    '<h2 style="font-weight:bold">bla</h2>',
+                    '<h2 style="font-weight:bold">bla</h2>',
+                ),
+            ],
+            sanitizer=Sanitizer(
+                {
+                    "tags": {"h2", "style"},
+                    "attributes": {"h2": {"style"}},
                     "empty": set(),
                     "separate": set(),
                 }
