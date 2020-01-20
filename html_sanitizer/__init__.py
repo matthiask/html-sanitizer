@@ -7,5 +7,5 @@ __version__ = ".".join(map(str, VERSION))
 
 try:
     from .sanitizer import *  # noqa
-except ImportError:  # noqa
+except ImportError:  # pragma: no cover
     pass

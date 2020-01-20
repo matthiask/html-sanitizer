@@ -256,7 +256,7 @@ class Sanitizer(object):
         lxml.html.clean.Cleaner(
             remove_unknown_tags=False,
             # Remove style *tags* if not explicitly allowed
-            style='style' not in self.tags,
+            style="style" not in self.tags,
             # Do not strip out style attributes; we still need the style
             # information to convert spans into em/strong tags
             safe_attrs_only=False,
