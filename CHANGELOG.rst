@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ===============
 
+- Be able to keep the ``<style>`` tag by adding it to ``tags``.
+
+
 `1.8`_ (2019-11-21)
 ====================
 
