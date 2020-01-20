@@ -5,12 +5,17 @@ Change log
 `Next version`_
 ===============
 
+
+`1.9`_ (2020-01-20)
+===================
+
 - Added Python 3.8 to the CI matrix.
 - Be able to keep the ``<style>`` tag by adding it to ``tags``.
+- Added a style check to the CI matrix.
 
 
 `1.8`_ (2019-11-21)
-====================
+===================
 
 - Actually added support for customizing lxml's autolinking behavior
   using a dictionary argument.
@@ -24,7 +29,7 @@ Change log
 
 
 `1.7`_ (2019-02-19)
-====================
+===================
 
 - Added a system check which validates sanitizer configurations early
   when using Django.
@@ -44,7 +49,7 @@ Change log
 
 
 `1.6`_ (2018-06-29)
-====================
+===================
 
 - Fixed another edge case where a tag which is allowed to be empty was
   erroneously removed if it contained not only whitespace but also a
@@ -52,7 +57,7 @@ Change log
 
 
 `1.5`_ (2018-06-01)
-====================
+===================
 
 - Fixed a few edge whitespace normalization edge cases and a bug where
   removing an empty tag removed all whitespace.
@@ -66,7 +71,7 @@ Change log
 
 
 `1.4`_ (2018-03-29)
-====================
+===================
 
 - Corrected the required lxml version in ``install_requires``.
 - Added comments and testing for more edge cases.
@@ -79,7 +84,7 @@ Change log
 
 
 `1.3`_ (2017-09-22)
-====================
+===================
 
 - Fixed a case where tags with content between them were erroneously merged.
 - Added a ``tox.ini`` file for running style checks and tests.
@@ -90,7 +95,7 @@ Change log
 
 
 `1.2`_ (2017-05-25)
-====================
+===================
 
 - Fixed the erroneous removal of all whitespace between adjacent
   elements.
@@ -102,14 +107,14 @@ Change log
 
 
 `1.1`_ (2017-05-02)
-====================
+===================
 
 - Added ``html_sanitizer.django.get_sanitizer`` to provide an official
   way of configuring HTML sanitizers using Django settings.
 
 
 `1.0`_ (2017-05-02)
-====================
+===================
 
 - Initial public release.
 
@@ -126,4 +131,5 @@ Change log
 .. _1.6: https://github.com/matthiask/html-sanitizer/compare/1.5...1.6
 .. _1.7: https://github.com/matthiask/html-sanitizer/compare/1.6...1.7
 .. _1.8: https://github.com/matthiask/html-sanitizer/compare/1.7...1.8
-.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.8...master
+.. _1.9: https://github.com/matthiask/html-sanitizer/compare/1.8...1.9
+.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.9...master
