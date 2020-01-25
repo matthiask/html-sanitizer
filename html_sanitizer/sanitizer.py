@@ -107,7 +107,7 @@ def anchor_id_to_name(element):
 
 def normalize_whitespace_in_text_or_tail(element, whitespace_re=None):
     if whitespace_re is None:
-        whitespace_re = r"\s+"
+        whitespace_re = re.compile(r"\s+")
     if element.text:
         while True:
             text = whitespace_re.sub(" ", element.text)
