@@ -8,9 +8,10 @@ python:
   - "3.6"
   - "3.7"
   - "3.8"
+  - "3.9"
 matrix:
   include:
-    - python: 3.7
+    - python: 3.8
       env: REQ="black flake8"
       install:
         - pip install black flake8
