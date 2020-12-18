@@ -2,9 +2,6 @@
 HTML sanitizer
 ==============
 
-.. image:: https://travis-ci.org/matthiask/html-sanitizer.svg?branch=master
-    :target: https://travis-ci.org/matthiask/html-sanitizer
-
 This is a allowlist-based and very opinionated HTML sanitizer that
 can be used both for untrusted and trusted sources. It attempts to clean
 up the mess made by various rich text editors and or copy-pasting to

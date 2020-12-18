@@ -1,16 +1,10 @@
-from __future__ import absolute_import, unicode_literals
+from functools import lru_cache
 
 from django.conf import settings
 from django.core import checks
 from django.core.exceptions import ImproperlyConfigured
 
 from .sanitizer import Sanitizer
-
-try:
-    from functools import lru_cache
-except ImportError:  # pragma: no cover
-    # Django versions older than 3.0
-    from django.utils.lru_cache import lru_cache
 
 
 def _get_sanitizer(name="default"):

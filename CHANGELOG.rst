@@ -5,6 +5,10 @@ Change log
 `Next version`_
 ===============
 
+- Dropped support for Python 2.7.
+- Switched from Travis CI to GitHub actions. Added Python 3.9 to the CI
+  matrix.
+
 
 `1.9`_ (2020-01-20)
 ===================
