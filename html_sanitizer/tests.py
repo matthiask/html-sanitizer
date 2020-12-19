@@ -3,8 +3,11 @@ from unittest import TestCase
 from .sanitizer import Sanitizer
 
 
+default_sanitizer = Sanitizer()
+
+
 class SanitizerTestCase(TestCase):
-    def run_tests(self, entries, sanitizer=Sanitizer()):
+    def run_tests(self, entries, sanitizer=default_sanitizer):
         for before, after in entries:
             with self.subTest(before=before, after=after):
                 after = before if after is None else after
