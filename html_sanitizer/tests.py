@@ -154,6 +154,7 @@ class SanitizerTestCase(TestCase):
         entries = (
             ("<li> - foo</li>", "<li>foo</li>"),
             ("<li>* foo</li>", "<li>foo</li>"),
+            ("<li>*foo</li>", "<li>*foo</li>"),
         )
 
         self.run_tests(entries)

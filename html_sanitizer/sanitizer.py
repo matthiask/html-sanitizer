@@ -308,11 +308,7 @@ class Sanitizer(object):
 
                 # remove list markers, maybe copy-pasted from word or whatever
                 if element.text:
-                    element.text = re.sub(
-                        r"^(\&nbsp;|\&#160;|\s)*(-|\*|&#183;)(\&nbsp;|\&#160;|\s)+",  # noqa
-                        "",
-                        element.text,
-                    )
+                    element.text = re.sub(r"^\s*(-|\*|&#183;)\s+", "", element.text)
 
             elif element.tag in self.whitespace:
                 # Drop the next element if
