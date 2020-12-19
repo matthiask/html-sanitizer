@@ -1,16 +1,9 @@
-from contextlib import contextmanager
 from unittest import TestCase
 
 from .sanitizer import Sanitizer
 
 
 class SanitizerTestCase(TestCase):
-    if not hasattr(TestCase, "subTest"):
-
-        @contextmanager
-        def subTest(self, *args, **kwargs):
-            yield
-
     def run_tests(self, entries, sanitizer=Sanitizer()):
         for before, after in entries:
             with self.subTest(before=before, after=after):
