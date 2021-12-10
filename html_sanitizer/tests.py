@@ -545,3 +545,26 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
                 (external_entities, "    ]&gt;&amp;xxe; "),
             ]
         )
+
+    def test_data_attributes(self):
+        sanitizer = Sanitizer(
+            {
+                "tags": ["span"],
+                "empty": (),
+                "separate": (),
+                "attributes": {"span": {"data-title"}},
+            }
+        )
+
+        entries = (
+            (
+                '<span data-title="Test">Content</span>',
+                '<span data-title="Test">Content</span>',
+            ),
+            (
+                '<span data-title="Test" data-other="Stuff">Content</span>',
+                '<span data-title="Test">Content</span>',
+            ),
+        )
+
+        self.run_tests(entries, sanitizer=sanitizer)
