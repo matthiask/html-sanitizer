@@ -7,14 +7,14 @@ default_sanitizer = Sanitizer()
 
 
 class SanitizerTestCase(TestCase):
-    def run_tests(self, entries, sanitizer=default_sanitizer):
+    def run_tests(self, entries, *, sanitizer=default_sanitizer, strip=False):
         for before, after in entries:
             with self.subTest(before=before, after=after):
                 after = before if after is None else after
                 result = sanitizer.sanitize(before)
                 self.assertEqual(
-                    result,
-                    after,
+                    result.strip() if strip else result,
+                    after.strip() if strip else after,
                     "Cleaning '%s', expected '%s' but got '%s'"
                     % (
                         before.encode("unicode-escape"),
@@ -543,7 +543,8 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
             [
                 (source, "             ]&gt; &amp;lol9; "),
                 (external_entities, "    ]&gt;&amp;xxe; "),
-            ]
+            ],
+            strip=True,
         )
 
     def test_data_attributes(self):
