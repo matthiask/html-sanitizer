@@ -6,7 +6,7 @@ Change log
 ===============
 
 - Dropped support for Python 2.7 and 3.5.
-- Raised the minimum lxml version to the current 4.6.3.
+- Raised the minimum lxml version to the current 4.9.1.
 - Switched from Travis CI to GitHub actions. Added Python 3.9 to the CI
   matrix.
 - Renamed the main branch to main.
