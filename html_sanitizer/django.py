@@ -32,7 +32,7 @@ def check_configuration(app_configs, **kwargs):
         except TypeError as exc:
             errors.append(
                 checks.Error(
-                    "Invalid sanitizer configuration '%s': %s" % (name, exc),
+                    f"Invalid sanitizer configuration '{name}': {exc}",
                     id="html_sanitizer.E001",
                 )
             )

@@ -164,7 +164,7 @@ DEFAULT_SETTINGS = {
 }
 
 
-class Sanitizer(object):
+class Sanitizer:
     def __init__(self, settings=None):
         self.__dict__.update(DEFAULT_SETTINGS)
         self.__dict__.update(settings or {})
@@ -186,11 +186,9 @@ class Sanitizer(object):
         else:
             force_unicode_prefix = ""
         self.only_whitespace_re = re.compile(
-            r"%s^%s*$" % (force_unicode_prefix, re_whitespace)
+            rf"{force_unicode_prefix}^{re_whitespace}*$"
         )
-        self.whitespace_re = re.compile(
-            r"%s%s+" % (force_unicode_prefix, re_whitespace)
-        )
+        self.whitespace_re = re.compile(rf"{force_unicode_prefix}{re_whitespace}+")
 
         # Validate the settings.
         if not self.tags:
@@ -202,11 +200,13 @@ class Sanitizer(object):
             )
         if not self.tags.issuperset(self.empty):
             raise TypeError(
-                'Tags in "empty", but not allowed: %r' % (self.empty - self.tags,)
+                f'Tags in "empty", but not allowed: {self.empty - self.tags!r}'
             )
         if not self.tags.issuperset(self.separate):
             raise TypeError(
-                'Tags in "separate", but not allowed: %r' % (self.separate - self.tags,)
+                'Tags in "separate", but not allowed: {!r}'.format(
+                    self.separate - self.tags
+                )
             )
         if not self.tags.issuperset(self.attributes.keys()):
             raise TypeError(
@@ -347,12 +347,12 @@ class Sanitizer(object):
                     # tags of a mergeable type.
                     if nx.text:
                         if len(element):
-                            list(element)[-1].tail = "%s %s" % (
+                            list(element)[-1].tail = "{} {}".format(
                                 list(element)[-1].tail or "",
                                 nx.text,
                             )
                         else:
-                            element.text = "%s %s" % (element.text or "", nx.text)
+                            element.text = "{} {}".format(element.text or "", nx.text)
 
                     for child in nx:
                         element.append(child)

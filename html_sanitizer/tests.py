@@ -569,3 +569,10 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
         )
 
         self.run_tests(entries, sanitizer=sanitizer)
+
+    def test_entities(self):
+        self.run_tests(
+            [
+                ("&lsquo;", "\u2018"),
+            ],
+        )
