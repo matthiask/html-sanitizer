@@ -51,7 +51,6 @@ def normalize_overall_whitespace(
 ):
     if keep_typographic_whitespace:
         return html
-        # remove all sorts of newline and nbsp characters
     whitespace = ["\xa0", "&nbsp;", "&#160;", "&#xa0;","\n", "&#10;", "&#xa;", "\r", "&#13;", "&#xd;"]
     if whitespace_re is None:
         whitespace_re = r"\s+"
