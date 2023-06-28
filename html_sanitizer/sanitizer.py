@@ -370,7 +370,7 @@ class Sanitizer:
 
             # remove all attributes which are not explicitly allowed
             allowed = self.attributes.get(element.tag, [])
-            for key in element:
+            for key in element.keys():  # noqa: SIM118 (do not remove .keys())
                 if key not in allowed:
                     del element.attrib[key]
 
