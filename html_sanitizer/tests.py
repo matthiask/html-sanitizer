@@ -421,6 +421,14 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
                     "\u2003\u2009\u205f\u2005\u2006\u2008\u3000",
                     "\u200a\u2003\u202f\u2004\xa0\u2007\u2002\u2002"
                     "\u2003\u2009\u205f\u2005\u2006\u2008\u3000",
+                ),
+                (
+                    "Hello This is a paragraph. \n"
+                    "\tHello. This is a tabled line."
+                    "Hello.This is beginning of the end.\r",
+                    "Hello This is a paragraph. \n"
+                    "\tHello. This is a tabled line."
+                    "Hello.This is beginning of the end.\r"
                 )
             ],
             sanitizer=sanitizer,

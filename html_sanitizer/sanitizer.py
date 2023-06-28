@@ -47,15 +47,13 @@ typographic_whitespace = "".join(
 def normalize_overall_whitespace(
     html, keep_typographic_whitespace=False, whitespace_re=None
 ):
-    # remove all sorts of newline and nbsp characters
-    whitespace = ["\n", "&#10;", "&#xa;", "\r", "&#13;", "&#xd;"]
-    if not keep_typographic_whitespace:
-        # non-breaking space representations
-        whitespace += ["\xa0", "&nbsp;", "&#160;", "&#xa0;"]
-    if whitespace_re is None:
-        whitespace_re = r"\s+"
+    if keep_typographic_whitespace:
+        return html
+    whitespace = ["\xa0", "&nbsp;", "&#160;", "&#xa0;","\n", "&#10;", "&#xa;", "\r", "&#13;", "&#xd;"]
     for ch in whitespace:
         html = html.replace(ch, " ")
+    if whitespace_re is None:
+        whitespace_re = r"\s+"
     html = re.sub(whitespace_re, " ", html)
     return html
 
