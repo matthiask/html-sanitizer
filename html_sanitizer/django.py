@@ -14,8 +14,8 @@ def _get_sanitizer(name="default"):
     elif name == "default":
         return Sanitizer()
     raise ImproperlyConfigured(
-        "Unknown sanitizer %r, did you define HTML_SANITIZERS[%r] in your"
-        " Django settings module?" % (name, name)
+        "Unknown sanitizer {!r}, did you define HTML_SANITIZERS[{!r}] in your"
+        " Django settings module?".format(name, name)
     )
 
 

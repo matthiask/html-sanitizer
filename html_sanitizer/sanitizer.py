@@ -45,11 +45,22 @@ typographic_whitespace = "".join(
 
 
 def normalize_overall_whitespace(
-    html, keep_typographic_whitespace=False, whitespace_re=None
+    html, *, keep_typographic_whitespace=False, whitespace_re=None
 ):
     if keep_typographic_whitespace:
         return html
-    whitespace = ["\xa0", "&nbsp;", "&#160;", "&#xa0;","\n", "&#10;", "&#xa;", "\r", "&#13;", "&#xd;"]
+    whitespace = [
+        "\xa0",
+        "&nbsp;",
+        "&#160;",
+        "&#xa0;",
+        "\n",
+        "&#10;",
+        "&#xa;",
+        "\r",
+        "&#13;",
+        "&#xd;",
+    ]
     for ch in whitespace:
         html = html.replace(ch, " ")
     if whitespace_re is None:
@@ -177,16 +188,9 @@ class Sanitizer:
             re_whitespace = r"[^\S%s]" % typographic_whitespace
         else:
             re_whitespace = r"\s"
-        import sys
 
-        if int(sys.version.split(".")[0]) == 2:
-            force_unicode_prefix = "(?u)"
-        else:
-            force_unicode_prefix = ""
-        self.only_whitespace_re = re.compile(
-            rf"{force_unicode_prefix}^{re_whitespace}*$"
-        )
-        self.whitespace_re = re.compile(rf"{force_unicode_prefix}{re_whitespace}+")
+        self.only_whitespace_re = re.compile(rf"^{re_whitespace}*$")
+        self.whitespace_re = re.compile(rf"{re_whitespace}+")
 
         # Validate the settings.
         if not self.tags:
@@ -208,8 +212,7 @@ class Sanitizer:
             )
         if not self.tags.issuperset(self.attributes.keys()):
             raise TypeError(
-                'Tags in "attributes", but not allowed: %r'
-                % (set(self.attributes.keys()) - self.tags,)
+                f'Tags in "attributes", but not allowed: {set(self.attributes.keys()) - self.tags!r}'
             )
 
         anchor_attributes = self.attributes.get("a", ())
@@ -367,7 +370,7 @@ class Sanitizer:
 
             # remove all attributes which are not explicitly allowed
             allowed = self.attributes.get(element.tag, [])
-            for key in element.keys():
+            for key in element:
                 if key not in allowed:
                     del element.attrib[key]
 

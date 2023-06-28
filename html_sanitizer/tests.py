@@ -428,8 +428,8 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
                     "Hello.This is beginning of the end.\r",
                     "Hello This is a paragraph. \n"
                     "\tHello. This is a tabled line."
-                    "Hello.This is beginning of the end.\r"
-                )
+                    "Hello.This is beginning of the end.\r",
+                ),
             ],
             sanitizer=sanitizer,
         )
