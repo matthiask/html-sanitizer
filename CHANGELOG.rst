@@ -12,6 +12,7 @@ Change log
 - Renamed the main branch to main.
 - Switched to a declarative setup.
 - Fixed a whitespace dependency in the testsuite.
+- Switched to hatchling and ruff.
 
 
 `1.9`_ (2020-01-20)
