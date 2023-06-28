@@ -13,6 +13,8 @@ Change log
 - Switched to a declarative setup.
 - Fixed a whitespace dependency in the testsuite.
 - Switched to hatchling and ruff.
+- Made behavior-altering arguments to ``normalize_overall_whitespace``
+  keyword-only.
 
 
 `1.9`_ (2020-01-20)
@@ -141,4 +143,3 @@ Change log
 .. _1.7: https://github.com/matthiask/html-sanitizer/compare/1.6...1.7
 .. _1.8: https://github.com/matthiask/html-sanitizer/compare/1.7...1.8
 .. _1.9: https://github.com/matthiask/html-sanitizer/compare/1.8...1.9
-.. _Next version: https://github.com/matthiask/html-sanitizer/compare/1.9...master

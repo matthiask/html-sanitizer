@@ -1,8 +1,7 @@
 import contextlib
 
 
-VERSION = (1, 9, 3)
-__version__ = ".".join(map(str, VERSION))
+__version__ = "1.9.3"
 
 
 with contextlib.suppress(ImportError):
