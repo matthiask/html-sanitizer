@@ -590,3 +590,13 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
                 ("&lsquo;", "\u2018"),
             ],
         )
+
+    def test_invalid_attributes(self):
+        with self.assertRaisesRegex(TypeError, "Expected a set but got"):
+            Sanitizer({"attributes": {"p": ("class")}})
+
+        with self.assertRaisesRegex(TypeError, "Expected a set but got"):
+            Sanitizer({"tags": "blub"})
+
+        with self.assertRaisesRegex(TypeError, 'Tags in "empty", but not allowed:'):
+            Sanitizer({"tags": {"blub"}})

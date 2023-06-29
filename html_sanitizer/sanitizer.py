@@ -173,16 +173,28 @@ DEFAULT_SETTINGS = {
 }
 
 
+def coerce_to_set(value):
+    if isinstance(value, set):
+        return value
+    elif isinstance(value, (tuple, list)):
+        return set(value)
+    raise TypeError(f"Expected a set but got value {value!r} of type {type(value)}")
+
+
 class Sanitizer:
     def __init__(self, settings=None):
         self.__dict__.update(DEFAULT_SETTINGS)
         self.__dict__.update(settings or {})
 
         # Allow iterables of any kind, not just sets.
-        self.tags = set(self.tags)
-        self.empty = set(self.empty)
-        self.separate = set(self.separate)
-        self.whitespace = set(self.whitespace)
+        self.tags = coerce_to_set(self.tags)
+        self.empty = coerce_to_set(self.empty)
+        self.separate = coerce_to_set(self.separate)
+        self.whitespace = coerce_to_set(self.whitespace)
+        self.attributes = {
+            tag: coerce_to_set(attributes)
+            for tag, attributes in self.attributes.items()
+        }
 
         if self.keep_typographic_whitespace:
             re_whitespace = r"[^\S%s]" % typographic_whitespace
