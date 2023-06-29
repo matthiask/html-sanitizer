@@ -5,6 +5,10 @@ Change log
 Next version
 ============
 
+
+2.1 (2023-06-29)
+================
+
 - Added a test for a type of misconfiguration.
 - Changed the sanitizer configuration validation to not allow unexpected data
   types in ``tags``, ``empty``, ``separate``, ``whitespace`` and
