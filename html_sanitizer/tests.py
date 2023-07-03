@@ -431,8 +431,8 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
                     "Hello.This is beginning of the end.\r",
                 ),
                 (
-                    "something    <br>somethinglse    ",
-                    "something    <br>somethinglse    ",
+                    "something    <br>somethingelse    ",
+                    "something    <br>somethingelse    ",
                 ),
             ],
             sanitizer=sanitizer,

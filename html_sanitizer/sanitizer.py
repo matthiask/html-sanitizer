@@ -113,18 +113,18 @@ def anchor_id_to_name(element):
 
 
 def normalize_whitespace_in_text_or_tail(
-    element, whitespace_re=None, keep_whitespaces=None
+    element, whitespace_re=None, keep_typographic_whitespace=False
 ):
     if whitespace_re is None:
         whitespace_re = re.compile(r"\s+")
-    if element.text and not keep_whitespaces:
+    if element.text and not keep_typographic_whitespace:
         while True:
             text = whitespace_re.sub(" ", element.text)
             if element.text == text:
                 break
             element.text = text
 
-    if element.tail and not keep_whitespaces:
+    if element.tail and not keep_typographic_whitespace:
         while True:
             text = whitespace_re.sub(" ", element.tail)
             if element.tail == text:
@@ -294,7 +294,7 @@ class Sanitizer:
             element = normalize_whitespace_in_text_or_tail(
                 element,
                 whitespace_re=self.whitespace_re,
-                keep_whitespaces=self.keep_typographic_whitespace,
+                keep_typographic_whitespace=self.keep_typographic_whitespace,
             )
 
             # remove empty tags if they are not explicitly allowed
@@ -398,7 +398,7 @@ class Sanitizer:
             element = normalize_whitespace_in_text_or_tail(
                 element,
                 whitespace_re=self.whitespace_re,
-                keep_whitespaces=self.keep_typographic_whitespace,
+                keep_typographic_whitespace=self.keep_typographic_whitespace,
             )
 
         if self.autolink is True:
