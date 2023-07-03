@@ -5,6 +5,14 @@ Change log
 Next version
 ============
 
+2.2 (2023-07-03)
+================
+
+- Changed ``keep_normalized_whitespace`` to preserve whitespace at the tail of
+  tags, not just between tags.
+- Changed the parameters of ``normalize_whitespace_in_text_or_tail`` to be
+  keyword-only.
+
 
 2.1 (2023-06-29)
 ================

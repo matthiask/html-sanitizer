@@ -113,7 +113,7 @@ def anchor_id_to_name(element):
 
 
 def normalize_whitespace_in_text_or_tail(
-    element, whitespace_re=None, keep_typographic_whitespace=False
+    element, *, whitespace_re=None, keep_typographic_whitespace=False
 ):
     if whitespace_re is None:
         whitespace_re = re.compile(r"\s+")
