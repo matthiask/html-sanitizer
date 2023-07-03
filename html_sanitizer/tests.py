@@ -430,6 +430,10 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
                     "\tHello. This is a tabled line."
                     "Hello.This is beginning of the end.\r",
                 ),
+                (
+                    "something    <br>somethingelse    ",
+                    "something    <br>somethingelse    ",
+                ),
             ],
             sanitizer=sanitizer,
         )
