@@ -220,9 +220,7 @@ class Sanitizer:
             )
         if not self.tags.issuperset(self.separate):
             raise TypeError(
-                'Tags in "separate", but not allowed: {!r}'.format(
-                    self.separate - self.tags
-                )
+                f'Tags in "separate", but not allowed: {self.separate - self.tags!r}'
             )
         if not self.tags.issuperset(self.attributes.keys()):
             raise TypeError(
