@@ -604,3 +604,22 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
 
         with self.assertRaisesRegex(TypeError, 'Tags in "empty", but not allowed:'):
             Sanitizer({"tags": {"blub"}})
+
+    def test_img_tag(self):
+        sanitizer = Sanitizer(
+            {
+                "tags": {"p", "img"},
+                "empty": {"img"},
+                "separate": (),
+                "attributes": {"img": {"alt", "src"}},
+            }
+        )
+
+        entries = (
+            (
+                '<p><img src="hello.jpg" alt="hello" class="hello"></p>',
+                '<p><img src="hello.jpg" alt="hello"></p>',
+            ),
+        )
+
+        self.run_tests(entries, sanitizer=sanitizer)
