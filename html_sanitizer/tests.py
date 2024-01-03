@@ -617,3 +617,24 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
         )
 
         self.run_tests(entries, sanitizer=sanitizer)
+
+    def test_code_whitespace(self):
+        sanitizer = Sanitizer(
+            {
+                "tags": {"code"},
+                "empty": set(),
+                "separate": set(),
+                "attributes": {},
+                "keep_typographic_whitespace": True,
+            }
+        )
+
+        html = """\
+<code>
+git status
+git add
+git commit
+</code>
+"""
+
+        self.run_tests([(html, html)], sanitizer=sanitizer)
