@@ -5,6 +5,15 @@ Change log
 Next version
 ============
 
+
+2.3 (2024-02-07)
+================
+
+- Avoided adding whitespace when merging tags of the same type.
+- Updated the tests.
+- Switched from black to the ruff formatter.
+
+
 2.2 (2023-07-03)
 ================
 
