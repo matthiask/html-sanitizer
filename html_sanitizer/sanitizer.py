@@ -362,12 +362,12 @@ class Sanitizer:
                     # tags of a mergeable type.
                     if nx.text:
                         if len(element):
-                            list(element)[-1].tail = "{} {}".format(
+                            list(element)[-1].tail = "{}{}".format(
                                 list(element)[-1].tail or "",
                                 nx.text,
                             )
                         else:
-                            element.text = "{} {}".format(element.text or "", nx.text)
+                            element.text = "{}{}".format(element.text or "", nx.text)
 
                     for child in nx:
                         element.append(child)

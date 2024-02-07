@@ -97,10 +97,14 @@ class SanitizerTestCase(TestCase):
 
     def test_03_merge(self):
         entries = (
-            ("<h2>foo</h2><h2>bar</h2>", "<h2>foo bar</h2>"),
+            ("<h2>foo</h2><h2>bar</h2>", "<h2>foobar</h2>"),
             ("<h2>foo  </h2>   <h2>   bar</h2>", "<h2>foo bar</h2> "),
         )
 
+        self.run_tests(entries)
+
+    def test_no_space_between_same_tags(self):
+        entries = [("<strong>Hel</strong><strong>lo</strong>", "<strong>Hello</strong>")]
         self.run_tests(entries)
 
     def test_04_p_in_li(self):
@@ -275,7 +279,7 @@ class SanitizerTestCase(TestCase):
                 (
                     '<p class="centered">Test <span class="bla">span</span>'
                     '<span class="blub">span</span></p>',
-                    '<p class="centered">Test <span class="bla">span span</span></p>',
+                    '<p class="centered">Test <span class="bla">spanspan</span></p>',
                 ),
                 ('<h1 class="centered">Test</h1>', '<h1 class="centered">Test</h1>'),
                 ('<h2 class="centered">Test</h2>', "<h2>Test</h2>"),
@@ -311,7 +315,7 @@ class SanitizerTestCase(TestCase):
                 (
                     '<p class="centered">Test <span class="bla">span</span>'
                     '<span class="bla">span</span></p>',
-                    '<p class="centered">Test <span class="bla">span span</span></p>',
+                    '<p class="centered">Test <span class="bla">spanspan</span></p>',
                 ),
             ],
             sanitizer=sanitizer,
