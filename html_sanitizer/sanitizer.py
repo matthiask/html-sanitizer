@@ -337,7 +337,6 @@ class Sanitizer:
                     )
                 ):
                     nx.drop_tag()
-                    continue
 
             if not element.text:
                 # No text before first child and first child is a <br>: Drop it

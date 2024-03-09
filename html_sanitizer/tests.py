@@ -73,6 +73,7 @@ class SanitizerTestCase(TestCase):
             ("<a>  </a>", "<a> </a>"),
             # ...but breaks without any additional content are still removed
             ("<a><br />  </a>", "<a> </a>"),
+            ("<p>blab<br hello='world' />blub<p>", "<p>blab<br>blub</p>"),
         ]
 
         self.run_tests(entries)
@@ -104,7 +105,9 @@ class SanitizerTestCase(TestCase):
         self.run_tests(entries)
 
     def test_no_space_between_same_tags(self):
-        entries = [("<strong>Hel</strong><strong>lo</strong>", "<strong>Hello</strong>")]
+        entries = [
+            ("<strong>Hel</strong><strong>lo</strong>", "<strong>Hello</strong>")
+        ]
         self.run_tests(entries)
 
     def test_04_p_in_li(self):
@@ -642,3 +645,13 @@ git commit
 """
 
         self.run_tests([(html, html)], sanitizer=sanitizer)
+
+    def test_br_attribute_sanitization(self):
+        """Attributes which aren't allowlisted are removed from br tags"""
+        self.run_tests(
+            [
+                ("<p><br hello=\"alert('world');\"/><br></p>", ""),
+                ('<p hello="world"></p>', ""),
+                ("<br hello=\"alert('world');\"/><br>", "<br>"),
+            ]
+        )

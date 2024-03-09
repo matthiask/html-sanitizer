@@ -5,6 +5,9 @@ Change log
 Next version
 ============
 
+- Fixed an edge case where ``br`` tag attributes weren't removed if the br tag
+  appears first.
+
 
 2.3 (2024-02-07)
 ================
