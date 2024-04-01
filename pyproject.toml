@@ -35,7 +35,8 @@ dynamic = [
 ]
 dependencies = [
   "beautifulsoup4",
-  "lxml[html_clean]>=5.2.0",
+  "lxml>=5.2.0",
+  "lxml-html-clean>=0.1.0",
 ]
 [project.urls]
 Homepage = "https://github.com/matthiask/html-sanitizer/"
