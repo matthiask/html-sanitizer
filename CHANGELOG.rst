@@ -5,8 +5,13 @@ Change log
 Next version
 ============
 
+2.4 (2024-04-01)
+================
+
 - Fixed an edge case where ``br`` tag attributes weren't removed if the br tag
   appears first.
+- Updated the ``lxml`` dependency to 5.2 and added the now-required
+  ``lxml[html_clean]`` extra.
 
 
 2.3 (2024-02-07)
