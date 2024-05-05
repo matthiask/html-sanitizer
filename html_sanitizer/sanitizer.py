@@ -250,6 +250,12 @@ class Sanitizer:
         Requires ``lxml`` and, for especially broken HTML, ``beautifulsoup4``.
         """
 
+        # normalize unicode
+        if self.keep_typographic_whitespace:
+            html = unicodedata.normalize("NFC", html)
+        else:
+            html = unicodedata.normalize("NFKC", html)
+
         html = normalize_overall_whitespace(
             html,
             keep_typographic_whitespace=self.keep_typographic_whitespace,
@@ -419,11 +425,5 @@ class Sanitizer:
 
         # remove wrapping tag needed by XML parser
         html = re.sub(r"^<div>|</div>$", "", html)
-
-        # normalize unicode
-        if self.keep_typographic_whitespace:
-            html = unicodedata.normalize("NFC", html)
-        else:
-            html = unicodedata.normalize("NFKC", html)
 
         return html

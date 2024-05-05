@@ -655,3 +655,13 @@ git commit
                 ("<br hello=\"alert('world');\"/><br>", "<br>"),
             ]
         )
+
+    def test_normalize_early(self):
+        self.run_tests(
+            [
+                (
+                    "\uff1cimg src=x onerror=\uff02alert(window.location)\uff02\uff1e",
+                    "",
+                ),
+            ]
+        )
