@@ -8,9 +8,9 @@ requires = [
 name = "html-sanitizer"
 description = "HTML sanitizer"
 readme = "README.rst"
-license = {text = "BSD-3-Clause"}
+license = { text = "BSD-3-Clause" }
 authors = [
-    { name = "Matthias Kestenholz", email = "mk@feinheit.ch" },
+  { name = "Matthias Kestenholz", email = "mk@feinheit.ch" },
 ]
 requires-python = ">=3.8"
 classifiers = [
@@ -35,19 +35,24 @@ dynamic = [
 ]
 dependencies = [
   "beautifulsoup4",
-  "lxml>=5.2.0",
-  "lxml-html-clean>=0.1.0",
+  "lxml>=5.2",
+  "lxml-html-clean>=0.1",
 ]
-[project.urls]
-Homepage = "https://github.com/matthiask/html-sanitizer/"
+urls.Homepage = "https://github.com/matthiask/html-sanitizer/"
 
 [tool.hatch.version]
 path = "html_sanitizer/__init__.py"
 
 [tool.ruff]
+target-version = "py38"
+
+fix = true
+show-fixes = true
 extend-select = [
   # pyflakes, pycodestyle
-  "F", "E", "W",
+  "F",
+  "E",
+  "W",
   # mmcabe
   "C90",
   # isort
@@ -79,7 +84,9 @@ extend-select = [
   # pygrep-hooks
   "PGH",
   # pylint
-  "PLC", "PLE", "PLW",
+  "PLC",
+  "PLE",
+  "PLW",
   # unused noqa
   "RUF100",
 ]
@@ -89,21 +96,12 @@ extend-ignore = [
   # No line length errors
   "E501",
 ]
-fix = true
-show-fixes = true
-target-version = "py38"
-
-[tool.ruff.isort]
-combine-as-imports = true
-lines-after-imports = 2
-
-[tool.ruff.mccabe]
-max-complexity = 15
-
-[tool.ruff.per-file-ignores]
-"*/migrat*/*" = [
+mccabe.max-complexity = 15
+per-file-ignores."*/migrat*/*" = [
   # Allow using PascalCase model names in migrations
   "N806",
   # Ignore the fact that migration files are invalid module names
   "N999",
 ]
+isort.combine-as-imports = true
+isort.lines-after-imports = 2
