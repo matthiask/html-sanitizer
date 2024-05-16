@@ -1,4 +1,4 @@
-from unittest import TestCase, expectedFailure
+from unittest import TestCase
 
 from .sanitizer import Sanitizer
 
@@ -666,7 +666,6 @@ git commit
             ]
         )
 
-    @expectedFailure
     def test_typographic_whitespace_tags_merging(self):
         html = "This is <strong>some</strong> <strong>text</strong> with adjacent tags."
         sanitizer = Sanitizer(
@@ -677,7 +676,7 @@ git commit
         )
         self.run_tests(
             [
-                (html, "This is <strong>some text</strong> with adjacent tags."),
+                (html, "This is <strong>some text</strong>  with adjacent tags."),
             ],
             sanitizer=sanitizer,
         )

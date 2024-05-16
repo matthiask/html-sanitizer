@@ -372,7 +372,9 @@ class Sanitizer:
                                 nx.text,
                             )
                         else:
-                            element.text = "{}{}".format(element.text or "", nx.text)
+                            element.text = "{}{}{}".format(
+                                element.text or "", element.tail or "", nx.text
+                            )
 
                     for child in nx:
                         element.append(child)
