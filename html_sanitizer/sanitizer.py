@@ -115,16 +115,19 @@ def anchor_id_to_name(element):
 def normalize_whitespace_in_text_or_tail(
     element, *, whitespace_re=None, keep_typographic_whitespace=False
 ):
+    if keep_typographic_whitespace:
+        return element
+
     if whitespace_re is None:
         whitespace_re = re.compile(r"\s+")
-    if element.text and not keep_typographic_whitespace:
+    if element.text:
         while True:
             text = whitespace_re.sub(" ", element.text)
             if element.text == text:
                 break
             element.text = text
 
-    if element.tail and not keep_typographic_whitespace:
+    if element.tail:
         while True:
             text = whitespace_re.sub(" ", element.tail)
             if element.tail == text:
