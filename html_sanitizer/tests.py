@@ -99,7 +99,7 @@ class SanitizerTestCase(TestCase):
     def test_03_merge(self):
         entries = (
             ("<h2>foo</h2><h2>bar</h2>", "<h2>foobar</h2>"),
-            ("<h2>foo  </h2>   <h2>   bar</h2>", "<h2>foo bar</h2> "),
+            ("<h2>foo  </h2>   <h2>   bar</h2>", "<h2>foo bar</h2>"),
         )
 
         self.run_tests(entries)
@@ -667,7 +667,6 @@ git commit
         )
 
     def test_typographic_whitespace_tags_merging(self):
-        html = "This is <strong>some</strong> <strong>text</strong> with adjacent tags."
         sanitizer = Sanitizer(
             {
                 "whitespace": set(),
@@ -676,7 +675,14 @@ git commit
         )
         self.run_tests(
             [
-                (html, "This is <strong>some text</strong>  with adjacent tags."),
+                (
+                    "This is <strong>some</strong> <strong>text</strong> with adjacent tags.",
+                    "This is <strong>some text</strong> with adjacent tags.",
+                ),
+                (
+                    "This is <strong>some</strong> <strong>text</strong>with adjacent tags.",
+                    "This is <strong>some text</strong>with adjacent tags.",
+                ),
             ],
             sanitizer=sanitizer,
         )

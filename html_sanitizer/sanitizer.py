@@ -383,7 +383,8 @@ class Sanitizer:
                         element.append(child)
 
                     # tail is merged with previous element.
-                    nx.drop_tree()
+                    element.tail = nx.tail
+                    nx.getparent().remove(nx)
 
                     # Process element again
                     backlog.append(element)
