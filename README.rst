@@ -75,6 +75,7 @@ The default settings are::
         ],
         "element_postprocessors": [],
         "is_mergeable": lambda e1, e2: True,
+        "unescape_special_chars": False,
     }
 
 The keys' meaning is as follows:
@@ -107,6 +108,8 @@ The keys' meaning is as follows:
   merged by default. This callable can be used to prevent merging of
   adjacent elements e.g. when their classes do not match
   (``lambda e1, e2: e1.get('class') == e2.get('class')``)
+- ``unescape_special_chars``: Whether to unescape pecial characters like 
+  &, <, and > which are escaped by default. 
 
 Settings can be specified partially when initializing a sanitizer
 instance, but are still checked for consistency. For example, it is not
