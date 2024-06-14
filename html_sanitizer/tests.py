@@ -74,6 +74,8 @@ class SanitizerTestCase(TestCase):
             # ...but breaks without any additional content are still removed
             ("<a><br />  </a>", "<a> </a>"),
             ("<p>blab<br hello='world' />blub<p>", "<p>blab<br>blub</p>"),
+            ("<p>A & B</p>", "<p>A &amp; B</p>"),
+            ("<p>A &lt; B</p>", "<p>A &lt; B</p>"),
         ]
 
         self.run_tests(entries)
