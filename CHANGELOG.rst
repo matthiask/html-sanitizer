@@ -9,6 +9,9 @@ Next version
   process would keep disallowed tags when using specially crafted HTML. Fixed
   in 2.4.2.
 - Fixed missing whitespace while merging adjacent tags.
+- Raised the minimum lxml-html-clean version to 0.4 because of a reported
+  vulnerability. We were already compatible, but enforcing the lower bound
+  makes sense.
 
 
 2.4 (2024-04-01)
