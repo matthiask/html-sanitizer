@@ -244,7 +244,7 @@ class Sanitizer:
         """
         return True
 
-    def sanitize(self, html):
+    def sanitize(self, html):  # noqa: C901 -- I know.
         """
         Clean HTML code from ugly copy-pasted CSS and empty elements
 

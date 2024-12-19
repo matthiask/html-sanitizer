@@ -27,6 +27,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
   "Topic :: Software Development",
 ]
@@ -95,6 +96,8 @@ extend-ignore = [
   "B905",
   # No line length errors
   "E501",
+  # Let me use percent formatting, it's not broken
+  "UP031",
 ]
 mccabe.max-complexity = 15
 per-file-ignores."*/migrat*/*" = [
