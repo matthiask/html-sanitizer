@@ -1,7 +1,7 @@
 import contextlib
 
 
-__version__ = "2.4.4"
+__version__ = "2.5.0"
 
 
 with contextlib.suppress(ImportError):

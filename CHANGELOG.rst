@@ -5,6 +5,10 @@ Change log
 Next version
 ============
 
+
+2.5 (2024-12-19)
+================
+
 - **Vulnerability:** Fixed an issue where normalizing unicode too late in the
   process would keep disallowed tags when using specially crafted HTML. Fixed
   in 2.4.2.
