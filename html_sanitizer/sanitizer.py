@@ -112,9 +112,22 @@ def anchor_id_to_name(element):
     return element
 
 
+def filter_control_characters(text):
+    """Filter out control characters that lxml cannot handle."""
+    if not text:
+        return text
+    return re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]", "", text)
+
+
 def normalize_whitespace_in_text_or_tail(
     element, *, whitespace_re=None, keep_typographic_whitespace=False
 ):
+    # Always filter control characters regardless of whitespace settings
+    if element.text:
+        element.text = filter_control_characters(element.text)
+    if element.tail:
+        element.tail = filter_control_characters(element.tail)
+
     if keep_typographic_whitespace:
         return element
 
@@ -233,7 +246,7 @@ class Sanitizer:
         anchor_attributes = self.attributes.get("a", ())
         if "target" in anchor_attributes and "rel" not in anchor_attributes:
             raise TypeError(
-                'Always allow "rel" when allowing "target" as anchor' " attribute"
+                'Always allow "rel" when allowing "target" as anchor attribute'
             )
 
     @staticmethod
@@ -269,7 +282,7 @@ class Sanitizer:
             doc = lxml.html.fromstring(html)
             lxml.html.tostring(doc, encoding="utf-8")
         except Exception:  # We could and maybe should be more specific...
-            from lxml.html import soupparser
+            from lxml.html import soupparser  # noqa: PLC0415
 
             doc = soupparser.fromstring(html)
 
@@ -332,7 +345,9 @@ class Sanitizer:
 
                 # remove list markers, maybe copy-pasted from word or whatever
                 if element.text:
-                    element.text = re.sub(r"^\s*(-|\*|&#183;)\s+", "", element.text)
+                    element.text = filter_control_characters(
+                        re.sub(r"^\s*(-|\*|&#183;)\s+", "", element.text)
+                    )
 
             elif element.tag in self.whitespace:
                 # Drop the next element if

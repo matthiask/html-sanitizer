@@ -58,10 +58,8 @@ class SanitizerTestCase(TestCase):
                 "<p><strong>Zeile 1</strong><br>Zeile 2<br>Zeile 3</p>",
             ),
             (
-                "<p><strong>A</strong>, <strong>B</strong>"
-                " und <strong>C</strong></p>",
-                "<p><strong>A</strong>, <strong>B</strong>"
-                " und <strong>C</strong></p>",
+                "<p><strong>A</strong>, <strong>B</strong> und <strong>C</strong></p>",
+                "<p><strong>A</strong>, <strong>B</strong> und <strong>C</strong></p>",
             ),
             ("<p><form>Zeile 1</form></p>", "<p>Zeile 1</p>"),
             # Suboptimal, should be cleaned further
@@ -119,7 +117,7 @@ class SanitizerTestCase(TestCase):
             (
                 "<li>foo<p>bar<strong>xx</strong>rab</p><strong>baz</strong>"
                 "a<p>b</p>c</li>",
-                "<li>foo bar <strong>xx</strong>rab<strong>baz</strong>a b" " c</li>",
+                "<li>foo bar <strong>xx</strong>rab<strong>baz</strong>a b c</li>",
             ),
         )
 
@@ -194,8 +192,7 @@ class SanitizerTestCase(TestCase):
         entries = (
             (
                 '<p><a href="http://example.com/">example.com</a></p>',
-                '<p><a href="http://example.com/"'
-                ' rel="nofollow">example.com</a></p>',
+                '<p><a href="http://example.com/" rel="nofollow">example.com</a></p>',
             ),
         )
 
@@ -437,7 +434,7 @@ Mitarbeitenden folgende geschäftlich bedingten Auslagen ersetzt:</font></p>
                     "Hello.This is beginning of the end.\r",
                     "Hello This is a paragraph. \n"
                     "\tHello. This is a tabled line."
-                    "Hello.This is beginning of the end.\r",
+                    "Hello.This is beginning of the end.\n",
                 ),
                 (
                     "something    <br>somethingelse    ",
@@ -687,4 +684,19 @@ git commit
                 ),
             ],
             sanitizer=sanitizer,
+        )
+
+    def test_control_characters(self):
+        self.run_tests(
+            [
+                (
+                    # Control characters are filtered out, leaving empty element which gets removed
+                    "<p>\x01</p>",
+                    "",
+                ),
+                (
+                    "<p>Hallo \x01 Welt</p>",
+                    "<p>Hallo Welt</p>",
+                ),
+            ]
         )

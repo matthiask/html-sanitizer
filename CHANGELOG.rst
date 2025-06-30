@@ -5,6 +5,9 @@ Change log
 Next version
 ============
 
+- Fixed crashes when feeding control characters into the sanitizer.
+- Fixed a problem with an overly specific test.
+
 
 2.5 (2024-12-19)
 ================

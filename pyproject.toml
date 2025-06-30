@@ -49,49 +49,49 @@ target-version = "py38"
 
 fix = true
 show-fixes = true
-extend-select = [
-  # pyflakes, pycodestyle
-  "F",
-  "E",
-  "W",
-  # mmcabe
-  "C90",
-  # isort
-  "I",
-  # pep8-naming
-  "N",
-  # pyupgrade
-  "UP",
-  # flake8-2020
-  "YTT",
-  # flake8-boolean-trap
-  "FBT",
+lint.extend-select = [
   # flake8-bugbear
   "B",
   # flake8-comprehensions
   "C4",
+  # mmcabe
+  "C90",
   # flake8-django
   "DJ",
+  "E",
+  # pyflakes, pycodestyle
+  "F",
+  # flake8-boolean-trap
+  "FBT",
   # flake8-logging-format
   "G",
-  # flake8-pie
-  "PIE",
-  # flake8-simplify
-  "SIM",
-  # flake8-tidy-imports
-  "TID",
+  # isort
+  "I",
   # flake8-gettext
   "INT",
+  # pep8-naming
+  "N",
   # pygrep-hooks
   "PGH",
+  # flake8-pie
+  "PIE",
   # pylint
   "PLC",
   "PLE",
   "PLW",
   # unused noqa
   "RUF100",
+  # flake8-simplify
+  "SIM",
+  # flake8-tidy-imports
+  "TID",
+  # pyupgrade
+  "UP",
+  "W",
+  # flake8-2020
+  "YTT",
 ]
-extend-ignore = [
+lint.extend-ignore = [
   # Allow zip() without strict=
   "B905",
   # No line length errors
@@ -99,12 +99,12 @@ extend-ignore = [
   # Let me use percent formatting, it's not broken
   "UP031",
 ]
-mccabe.max-complexity = 15
-per-file-ignores."*/migrat*/*" = [
+lint.per-file-ignores."*/migrat*/*" = [
   # Allow using PascalCase model names in migrations
   "N806",
   # Ignore the fact that migration files are invalid module names
   "N999",
 ]
-isort.combine-as-imports = true
-isort.lines-after-imports = 2
+lint.isort.combine-as-imports = true
+lint.isort.lines-after-imports = 2
+lint.mccabe.max-complexity = 15

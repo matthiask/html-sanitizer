@@ -14,12 +14,12 @@ repos:
       - id: mixed-line-ending
       - id: trailing-whitespace
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: 1.22.2
+    rev: 1.25.0
     hooks:
       - id: django-upgrade
         args: [--target-version, "3.2"]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.8.3"
+    rev: "v0.12.1"
     hooks:
       - id: ruff
       - id: ruff-format
@@ -32,10 +32,10 @@ repos:
         args: [--no-semi]
         exclude: "^conf/|.*\\.html$"
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: v2.5.0
+    rev: v2.6.0
     hooks:
       - id: pyproject-fmt
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.23
+    rev: v0.24.1
     hooks:
       - id: validate-pyproject
