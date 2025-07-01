@@ -188,6 +188,7 @@ DEFAULT_SETTINGS = {
         anchor_id_to_name,
     ],
     "element_postprocessors": [],
+    "unescape_special_chars": False, # see discussion https://github.com/matthiask/html-sanitizer/issues/46
 }
 
 
@@ -446,5 +447,13 @@ class Sanitizer:
 
         # remove wrapping tag needed by XML parser
         html = re.sub(r"^<div>|</div>$", "", html)
+
+        # see discussion https://github.com/matthiask/html-sanitizer/issues/46
+        if self.unescape_special_chars:
+            html = ( html
+                    .replace("&amp;", "&")
+                    .replace("&lt;", "<")
+                    .replace("&gt;", ">")
+            )
 
         return html
