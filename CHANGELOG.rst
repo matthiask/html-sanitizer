@@ -5,6 +5,9 @@ Change log
 Next version
 ============
 
+2.7 (unreleased)
+================
+
 - Added the ``preserve_whitespace`` setting which keeps whitespace inside the
   listed tags as-is. Defaults to ``{"pre"}``, which only has an effect if
   ``pre`` is added to the allowed tags.
