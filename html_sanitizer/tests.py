@@ -788,3 +788,21 @@ git commit
             ],
             sanitizer=Sanitizer({"embedded_hosts": {"www.youtube.com"}}),
         )
+
+    def test_drop_disallowed_contents(self):
+        sanitizer = Sanitizer({"drop_disallowed_contents": True})
+        self.run_tests(
+            [
+                (
+                    "<p>abc <span>def <em>ghi</em> jkl</span> mno</p>",
+                    "<p>abc mno</p>",
+                ),
+                (
+                    "<p>abc <b>def</b> <i>ghi</i></p>",
+                    "<p>abc <strong>def</strong> <em>ghi</em></p>",
+                ),
+                ("<badtag>secret</badtag><p>public</p>", "<p>public</p>"),
+                ("<p>a<badtag>b<em>c</em></badtag>d</p>", "<p>ad</p>"),
+            ],
+            sanitizer=sanitizer,
+        )

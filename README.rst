@@ -60,6 +60,7 @@ The default settings are::
         "whitespace": {"br"},
         "preserve_whitespace": {"pre"},
         "keep_typographic_whitespace": False,
+        "drop_disallowed_contents": False,
         "add_nofollow": False,
         "autolink": False,
         "embedded_hosts": set(),
@@ -94,6 +95,10 @@ The keys' meaning is as follows:
   effect for tags which are allowed.
 - ``keep_typographic_whitespace``: Keep typographically used space
   characters like non-breaking space etc.
+- ``drop_disallowed_contents``: Remove disallowed tags including their
+  contents. By default, only the tags themselves are removed and their
+  contents are kept. Element preprocessors run first, so e.g. ``b`` tags
+  are still converted into ``strong`` tags instead of being dropped.
 - ``add_nofollow``: Whether to add ``rel="nofollow"`` to all links.
 - ``autolink``: Enable lxml_'s autolinker_. May be either a boolean or a
   dictionary; a dictionary is passed as keyword arguments to

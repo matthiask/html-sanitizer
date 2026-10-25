@@ -10,6 +10,8 @@ Next version
   ``pre`` is added to the allowed tags.
 - Added the ``embedded_hosts`` setting which allows embedding content such as
   ``iframe`` elements from the listed hosts.
+- Added the ``drop_disallowed_contents`` setting which removes disallowed tags
+  including their contents.
 
 2.6 (2025-06-30)
 ================

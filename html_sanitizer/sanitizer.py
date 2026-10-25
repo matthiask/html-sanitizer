@@ -153,6 +153,7 @@ DEFAULT_SETTINGS = {
     "whitespace": {"br"},
     "preserve_whitespace": {"pre"},
     "keep_typographic_whitespace": False,
+    "drop_disallowed_contents": False,
     "add_nofollow": False,
     "autolink": False,
     "embedded_hosts": set(),
@@ -304,6 +305,10 @@ class Sanitizer:
 
             for processor in self.element_preprocessors:
                 element = processor(element)
+
+            if self.drop_disallowed_contents and element.tag not in self.tags:
+                element.drop_tree()
+                continue
 
             element = self.normalize_whitespace(element)
 
