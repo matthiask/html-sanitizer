@@ -58,6 +58,7 @@ The default settings are::
         "empty": {"hr", "a", "br"},
         "separate": {"a", "p", "li"},
         "whitespace": {"br"},
+        "preserve_whitespace": {"pre"},
         "keep_typographic_whitespace": False,
         "add_nofollow": False,
         "autolink": False,
@@ -87,6 +88,9 @@ The keys' meaning is as follows:
   default, tags of the same type are merged.
 - ``whitespace``: Tags which are treated as whitespace and removed from
   the beginning or end of other tags' content.
+- ``preserve_whitespace``: Tags inside which whitespace isn't normalized,
+  e.g. to keep line breaks in ``pre`` or ``code`` tags. Only has an
+  effect for tags which are allowed.
 - ``keep_typographic_whitespace``: Keep typographically used space
   characters like non-breaking space etc.
 - ``add_nofollow``: Whether to add ``rel="nofollow"`` to all links.

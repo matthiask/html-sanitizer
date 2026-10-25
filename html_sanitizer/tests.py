@@ -700,3 +700,49 @@ git commit
                 ),
             ]
         )
+
+    def test_preserve_whitespace(self):
+        sanitizer = Sanitizer(
+            {
+                "tags": {"p", "pre", "code", "strong"},
+                "empty": set(),
+                "separate": {"p", "pre"},
+                "attributes": {},
+            }
+        )
+        self.run_tests(
+            [
+                (
+                    "<pre>git status\ngit  add\n\tgit commit\n</pre>",
+                    "<pre>git status\ngit  add\n\tgit commit\n</pre>",
+                ),
+                (
+                    "<p>a\n\n  b</p>\n\n<pre><code>if x:\n    <strong>y</strong>\n</code></pre>\n\n<p>c  d</p>",
+                    "<p>a b</p> <pre><code>if x:\n    <strong>y</strong>\n</code></pre> <p>c d</p>",
+                ),
+                (
+                    "<pre><span>a\n  b</span>\n</pre>",
+                    "<pre>a\n  b\n</pre>",
+                ),
+                ("<code>a\n  b</code>", "<code>a b</code>"),
+            ],
+            sanitizer=sanitizer,
+        )
+
+        sanitizer = Sanitizer(
+            {
+                "tags": {"code"},
+                "empty": set(),
+                "separate": set(),
+                "attributes": {},
+                "preserve_whitespace": {"code"},
+            }
+        )
+        self.run_tests(
+            [("<code>a\n  b</code>", "<code>a\n  b</code>")],
+            sanitizer=sanitizer,
+        )
+
+    def test_preserve_whitespace_disallowed_tag(self):
+        # pre isn't allowed by default, therefore whitespace is normalized
+        self.run_tests([("<pre>a\n\n  b</pre>", "a b")])
