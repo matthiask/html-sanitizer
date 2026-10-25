@@ -746,3 +746,45 @@ git commit
     def test_preserve_whitespace_disallowed_tag(self):
         # pre isn't allowed by default, therefore whitespace is normalized
         self.run_tests([("<pre>a\n\n  b</pre>", "a b")])
+
+    def test_embedded_hosts(self):
+        settings = {
+            "tags": {"p", "iframe"},
+            "empty": {"iframe"},
+            "separate": {"p", "iframe"},
+            "attributes": {"iframe": {"src", "width", "height"}},
+        }
+        entries = [
+            (
+                '<iframe src="https://www.youtube.com/embed/abc" width="560" onload="alert(1)"></iframe>',
+                '<iframe src="https://www.youtube.com/embed/abc" width="560"></iframe>',
+            ),
+            ('<iframe src="https://evil.example.com/"></iframe>', ""),
+            ('<iframe src="//www.youtube.com/embed/abc"></iframe>', ""),
+            ('<iframe src="javascript:alert(1)"></iframe>', ""),
+            ("<iframe></iframe>", ""),
+            ('<p>a<embed src="https://www.youtube.com/x"></p>', "<p>a</p>"),
+        ]
+        self.run_tests(
+            entries,
+            sanitizer=Sanitizer({**settings, "embedded_hosts": {"www.youtube.com"}}),
+        )
+
+        # Without embedded_hosts no iframes are allowed at all
+        self.run_tests(
+            [
+                ('<iframe src="https://www.youtube.com/embed/abc"></iframe>', ""),
+            ],
+            sanitizer=Sanitizer(settings),
+        )
+
+        # iframe has to be an allowed tag
+        self.run_tests(
+            [
+                (
+                    '<p>x<iframe src="https://www.youtube.com/embed/abc">y</iframe></p>',
+                    "<p>xy</p>",
+                ),
+            ],
+            sanitizer=Sanitizer({"embedded_hosts": {"www.youtube.com"}}),
+        )

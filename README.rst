@@ -62,6 +62,7 @@ The default settings are::
         "keep_typographic_whitespace": False,
         "add_nofollow": False,
         "autolink": False,
+        "embedded_hosts": set(),
         "sanitize_href": sanitize_href,
         "element_preprocessors": [
             # convert span elements into em/strong if a matching style rule
@@ -97,6 +98,13 @@ The keys' meaning is as follows:
 - ``autolink``: Enable lxml_'s autolinker_. May be either a boolean or a
   dictionary; a dictionary is passed as keyword arguments to
   ``autolink``.
+- ``embedded_hosts``: Hosts from which embedded content such as
+  ``iframe`` elements is accepted (only ``http:`` and ``https:`` URLs).
+  Embedded content is dropped by default. To allow YouTube embeds you also
+  have to allow the tag and its attributes and allow it to be empty, e.g.
+  ``"tags": {..., "iframe"}``, ``"attributes": {"iframe": {"src", "width",
+  "height", "allowfullscreen"}}``, ``"empty": {..., "iframe"}`` and
+  ``"embedded_hosts": {"www.youtube.com", "www.youtube-nocookie.com"}``.
 - ``sanitize_href``: A callable that gets anchor's ``href`` value and
   returns a sanitized version. The default implementation checks whether
   links start with a few allowed prefixes, and if not, returns a single

@@ -155,6 +155,7 @@ DEFAULT_SETTINGS = {
     "keep_typographic_whitespace": False,
     "add_nofollow": False,
     "autolink": False,
+    "embedded_hosts": set(),
     "sanitize_href": sanitize_href,
     "element_preprocessors": [
         # convert span elements into em/strong if a matching style rule
@@ -190,6 +191,7 @@ class Sanitizer:
         self.empty = coerce_to_set(self.empty)
         self.separate = coerce_to_set(self.separate)
         self.whitespace = coerce_to_set(self.whitespace)
+        self.embedded_hosts = coerce_to_set(self.embedded_hosts)
         # Preserving whitespace inside tags which are removed later would
         # leak unnormalized whitespace into the output.
         self.preserve_whitespace = coerce_to_set(self.preserve_whitespace) & self.tags
@@ -285,6 +287,7 @@ class Sanitizer:
             inline_style=False,
             # Do not strip all form tags; we will filter them below
             forms=False,
+            host_whitelist=self.embedded_hosts,
         )(doc)
 
         # walk the tree recursively, because we want to be able to remove
@@ -422,6 +425,7 @@ class Sanitizer:
             safe_attrs_only=False,  # Our attributes allowlist is sufficient.
             add_nofollow=self.add_nofollow,
             forms=False,
+            host_whitelist=self.embedded_hosts,
         )(doc)
 
         html = lxml.html.tostring(doc, encoding="unicode")

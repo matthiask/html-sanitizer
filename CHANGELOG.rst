@@ -8,6 +8,8 @@ Next version
 - Added the ``preserve_whitespace`` setting which keeps whitespace inside the
   listed tags as-is. Defaults to ``{"pre"}``, which only has an effect if
   ``pre`` is added to the allowed tags.
+- Added the ``embedded_hosts`` setting which allows embedding content such as
+  ``iframe`` elements from the listed hosts.
 
 2.6 (2025-06-30)
 ================
