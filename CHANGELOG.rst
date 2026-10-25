@@ -5,7 +5,7 @@ Change log
 Next version
 ============
 
-2.7 (unreleased)
+2.7 (2026-10-25)
 ================
 
 - Added the ``preserve_whitespace`` setting which keeps whitespace inside the
